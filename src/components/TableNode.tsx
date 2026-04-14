@@ -9,10 +9,10 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 
 const HIGHLIGHT_STYLES = {
-  selected: "ring-2 ring-primary ring-offset-2 shadow-[0_0_20px_rgba(var(--primary),0.3)]",
-  outgoing: "ring-2 ring-cyan-500 ring-offset-2 shadow-[0_0_12px_rgba(6,182,212,0.2)]",
-  incoming: "ring-2 ring-pink-500 ring-offset-2 shadow-[0_0_12px_rgba(236,72,153,0.2)]",
-  both: "ring-2 ring-primary ring-offset-2 shadow-[0_0_12px_rgba(var(--primary),0.2)]",
+  selected: 'ring-2 ring-primary ring-offset-2 shadow-[0_0_20px_rgba(var(--primary),0.3)]',
+  outgoing: 'ring-2 ring-cyan-500 ring-offset-2 shadow-[0_0_12px_rgba(6,182,212,0.2)]',
+  incoming: 'ring-2 ring-pink-500 ring-offset-2 shadow-[0_0_12px_rgba(236,72,153,0.2)]',
+  both: 'ring-2 ring-primary ring-offset-2 shadow-[0_0_12px_rgba(var(--primary),0.2)]',
 } as const
 
 function TableNode({ data, id }: NodeProps<TableNodeData>) {
@@ -44,9 +44,9 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
   return (
     <div
       className={cn(
-        "min-w-[280px] rounded-xl overflow-hidden shadow-2xl transition-all duration-300 bg-card border",
-        highlight && highlight !== 'dimmed' ? HIGHLIGHT_STYLES[highlight] : "border-border",
-        isDimmed && "opacity-20 grayscale-[0.5]"
+        'min-w-[280px] rounded-xl overflow-hidden shadow-2xl transition-all duration-300 bg-card border',
+        highlight && highlight !== 'dimmed' ? HIGHLIGHT_STYLES[highlight] : 'border-border',
+        isDimmed && 'opacity-20 grayscale-[0.5]',
       )}
     >
       <Handle
@@ -57,10 +57,11 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
 
       {/* Header */}
       <div className="px-4 py-3 flex items-center justify-between bg-muted/30 border-b">
-        <span className="text-sm font-bold tracking-tight text-foreground">
-          {table.name}
-        </span>
-        <Badge variant="outline" className="h-5 px-1.5 text-[10px] font-medium bg-background/50">
+        <span className="text-sm font-bold tracking-tight text-foreground">{table.name}</span>
+        <Badge
+          variant="outline"
+          className="h-5 px-1.5 text-[10px] font-medium bg-background/50"
+        >
           {table.columns.length} cols
         </Badge>
       </div>
@@ -76,34 +77,36 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
             <div
               key={col.name}
               className={cn(
-                "px-4 py-2 flex items-center gap-3 text-[13px] relative group",
-                pk && "bg-amber-500/5",
-                fk && "bg-primary/5"
+                'px-4 py-2 flex items-center gap-3 text-[13px] relative group',
+                pk && 'bg-amber-500/5',
+                fk && 'bg-primary/5',
               )}
             >
               {/* Key identifier */}
               <div className="w-5 flex justify-center shrink-0">
                 {pk ? (
-                  <Badge variant="pk">PK</Badge>
+                  <Badge variant="default">PK</Badge>
                 ) : fk ? (
-                  <Badge variant="fk">FK</Badge>
+                  <Badge variant="default">FK</Badge>
                 ) : null}
               </div>
 
               {/* Column name */}
               <span
                 className={cn(
-                  "font-mono flex-1 truncate",
-                  pk ? "text-amber-500 font-bold" : fk ? "text-primary font-bold" : "text-foreground/80"
+                  'font-mono flex-1 truncate',
+                  pk
+                    ? 'text-amber-500 font-bold'
+                    : fk
+                      ? 'text-primary font-bold'
+                      : 'text-foreground/80',
                 )}
               >
                 {col.name}
               </span>
 
               {/* Type */}
-              <span className="font-mono text-[11px] text-muted-foreground/60">
-                {col.type}
-              </span>
+              <span className="font-mono text-[11px] text-muted-foreground/60">{col.type}</span>
 
               {/* Status Badges */}
               <div className="flex gap-1.5 ml-1">
@@ -113,13 +116,16 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
                   </span>
                 )}
                 {indexed && !pk && (
-                  <Badge variant="idx" className="h-4 px-1 text-[8px] font-bold">
+                  <Badge
+                    variant="default"
+                    className="h-4 px-1 text-[8px] font-bold"
+                  >
                     idx
                   </Badge>
                 )}
                 {fk && (
-                  <Badge 
-                    variant="fk" 
+                  <Badge
+                    variant="default"
                     className="h-4 px-1 text-[8px] font-mono border-primary/20"
                     title={`References ${fk.targetTable}.${fk.targetColumn}`}
                   >
