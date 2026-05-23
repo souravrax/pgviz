@@ -13,13 +13,16 @@ const tiers = [
       'Community support',
     ],
     cta: 'Download Free',
-    href: 'https://github.com/souravrax/pgviz/releases',
+    href: '/download/',
     highlighted: false,
-    tabs: null,
   },
   {
     name: 'Pro',
     description: 'For power users & independent devs.',
+    price: '$24',
+    period: '/year',
+    altPrices: '$4/mo · $59 lifetime',
+    badge: 'Most popular',
     features: [
       'Everything in Free',
       '2 device activations',
@@ -27,16 +30,16 @@ const tiers = [
       'Access to all upcoming Pro features',
     ],
     cta: 'Get Pro',
+    href: 'https://pgviz.lemonsqueezy.com/checkout',
     highlighted: true,
-    tabs: [
-      { label: 'Monthly', price: '$4', period: '/mo' },
-      { label: 'Yearly', price: '$24', period: '/yr', badge: 'Save 50%' },
-      { label: 'Lifetime', price: '$59', period: 'once', badge: 'Best value' },
-    ],
   },
   {
     name: 'Team',
     description: 'For organizations & engineering squads.',
+    price: '$49',
+    period: '/year',
+    altPrices: '$9/mo',
+    badge: 'Save 55%',
     features: [
       'Everything in Pro',
       '5 device activations per license key',
@@ -45,11 +48,8 @@ const tiers = [
       'Team collaboration workspaces',
     ],
     cta: 'Get Team',
+    href: 'https://pgviz.lemonsqueezy.com/checkout',
     highlighted: false,
-    tabs: [
-      { label: 'Monthly', price: '$9', period: '/mo' },
-      { label: 'Yearly', price: '$49', period: '/yr', badge: 'Save 55%' },
-    ],
   },
 ];
 ---
@@ -68,87 +68,31 @@ const tiers = [
           tiers.map((tier) => (
             <div
               class:list={[
-                'flex flex-col gap-8 rounded-3xl px-6 py-8',
+                'relative flex flex-col gap-8 rounded-3xl px-6 py-8',
                 tier.highlighted
-                  ? 'bg-primary-600 text-white dark:bg-primary-500'
+                  ? 'bg-primary-600 text-white dark:bg-primary-500 ring-4 ring-primary-600/20 dark:ring-primary-400/20'
                   : 'bg-primary-500/10 dark:bg-primary-400/10',
               ]}
-              x-data={`{ activeTab: '${tier.tabs ? tier.tabs[1].label : ''}' }`}
             >
+              {tier.badge && (
+                <span
+                  class:list={[
+                    'absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-xs font-bold',
+                    tier.highlighted
+                      ? 'bg-white text-primary-600'
+                      : 'bg-primary-600 text-white dark:bg-primary-400 dark:text-primary-950',
+                  ]}
+                >
+                  {tier.badge}
+                </span>
+              )}
+
               <div class="flex flex-col gap-4">
                 <h3 class:list={['text-xl font-medium', tier.highlighted && 'text-white']}>
                   {tier.name}
                 </h3>
 
-                {tier.tabs ? (
-                  <div class="flex flex-col gap-4">
-                    {/* Tab buttons */}
-                    <div
-                      class:list={[
-                        'inline-flex rounded-full p-1',
-                        tier.highlighted
-                          ? 'bg-white/20'
-                          : 'bg-primary-600/10 dark:bg-primary-400/10',
-                      ]}
-                    >
-                      {tier.tabs.map((tab) => (
-                        <button
-                          type="button"
-                          class:list={[
-                            'flex-1 rounded-full px-3 py-1.5 text-sm font-medium transition',
-                            tier.highlighted
-                              ? 'text-white/70 hover:text-white'
-                              : 'text-primary-950/60 hover:text-primary-950 dark:text-primary-200/60 dark:hover:text-primary-200',
-                          ]}
-                          :class={`
-                            ${tier.highlighted ? 'bg-white text-primary-600 shadow-sm' : 'bg-white text-primary-700 dark:bg-primary-950 dark:text-primary-300 shadow-sm'}
-                          `}
-                          x-bind:class={`activeTab === '${tab.label}' ? '${tier.highlighted ? 'bg-white text-primary-600 shadow-sm' : 'bg-white text-primary-700 dark:bg-primary-950 dark:text-primary-300 shadow-sm'}' : ''`}
-                          x-on:click={`activeTab = '${tab.label}'`}
-                        >
-                          {tab.label}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Tab content */}
-                    {tier.tabs.map((tab) => (
-                      <div
-                        x-show={`activeTab === '${tab.label}'`}
-                        x-transition
-                        class="flex flex-col gap-1"
-                      >
-                        <div class="flex items-baseline gap-2">
-                          <span class:list={['text-4xl font-bold', tier.highlighted && 'text-white']}>
-                            {tab.price}
-                          </span>
-                          <span
-                            class:list={[
-                              'text-sm',
-                              tier.highlighted
-                                ? 'text-white/80'
-                                : 'text-primary-950/60 dark:text-primary-200/60',
-                            ]}
-                          >
-                            {tab.period}
-                          </span>
-                          {tab.badge && (
-                            <span
-                              class:list={[
-                                'ml-auto text-xs font-bold px-2 py-0.5 rounded-full',
-                                tier.highlighted
-                                  ? 'bg-white/20 text-white'
-                                  : 'bg-primary-600/10 text-primary-700 dark:bg-primary-400/20 dark:text-primary-300',
-                              ]}
-                            >
-                              {tab.badge}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
+                <div class="flex flex-col gap-1">
                   <div class="flex items-baseline gap-1">
                     <span class:list={['text-4xl font-bold', tier.highlighted && 'text-white']}>
                       {tier.price}
@@ -164,7 +108,19 @@ const tiers = [
                       {tier.period}
                     </span>
                   </div>
-                )}
+                  {tier.altPrices && (
+                    <p
+                      class:list={[
+                        'text-xs',
+                        tier.highlighted
+                          ? 'text-white/70'
+                          : 'text-primary-950/50 dark:text-primary-200/50',
+                      ]}
+                    >
+                      Also available: {tier.altPrices}
+                    </p>
+                  )}
+                </div>
 
                 <p
                   class:list={[
@@ -180,10 +136,10 @@ const tiers = [
 
               <ul class="flex flex-col gap-3">
                 {tier.features.map((feature) => (
-                  <li class="flex items-center gap-3 text-sm">
+                  <li class="flex items-start gap-3 text-sm">
                     <svg
                       class:list={[
-                        'h-5 w-5 shrink-0',
+                        'mt-0.5 h-5 w-5 shrink-0',
                         tier.highlighted ? 'text-white' : 'text-primary-600 dark:text-primary-400',
                       ]}
                       xmlns="http://www.w3.org/2000/svg"
@@ -198,9 +154,9 @@ const tiers = [
               </ul>
 
               <a
-                href="https://pgviz.lemonsqueezy.com/checkout"
-                target="_blank"
-                rel="noopener noreferrer"
+                href={tier.href}
+                target={tier.href.startsWith('http') ? '_blank' : '_self'}
+                rel={tier.href.startsWith('http') ? 'noopener noreferrer' : ''}
                 class:list={[
                   'mt-auto inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium transition',
                   tier.highlighted
