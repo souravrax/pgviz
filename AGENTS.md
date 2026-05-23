@@ -6,53 +6,63 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# pgviz — Project Context
+# pgviz
 
-## What is pgviz?
+Tauri v2 desktop app for visualizing PostgreSQL databases. Next.js 16 static-export frontend, Rust backend. No web server.
 
-A Tauri v2 desktop app for visualizing and exploring PostgreSQL databases. Next.js frontend, Rust backend. No web server — everything is local.
+## Dev commands
+
+```bash
+pnpm tauri dev               # Start dev mode (needs Rust + Node)
+pnpm exec tsc --noEmit       # TypeScript check
+cd src-tauri && cargo check  # Rust check
+cd src-tauri && cargo check --release  # Rust check (release = keyring backend)
+```
+
+Package manager: **pnpm** (`packageManager: pnpm@10.0.0` in `package.json`).
 
 ## Architecture
 
-- **Frontend:** Next.js with static export (`output: 'export'`)
-- **Backend:** Rust via Tauri commands (`tokio-postgres`)
-- **Storage:** JSON file in dev mode (`databases.json`), OS keyring in release builds
-- **Auto-updates:** Tauri updater plugin checking GitHub releases
+- **Frontend:** Next.js with `output: 'export'`. Served inside a Tauri WebView. No actual web server.
+- **Backend:** Rust Tauri commands in `src-tauri/src/commands.rs`. All DB ops use `tokio-postgres`.
+- **Frontend → Rust:** Every DB call goes through `invoke()` via `src/lib/tauri-api.ts`. There is no HTTP API, no `fetch` to localhost.
+- **Storage:** Conditional compilation:
+  - `#[cfg(dev)]` → JSON file at `app_config_dir()/databases.json`
+  - `#[cfg(not(dev))]` → OS keyring (`com.pgviz.app` service)
+- **Auto-updater:** Tauri updater plugin. Fetches `latest.json` from GitHub releases. Requires repo to be **public**.
+- **Native menus:** Built in Rust (`src-tauri/src/lib.rs`), emit events to frontend (`MenuListener.tsx`).
 
-## Distribution Model
+## Key entry points
 
-- **Price:** $10 on Lemon Squeezy
-- **License:** PolyForm Noncommercial 1.0.0 (personal free, commercial requires purchase)
-- **Source:** Public on GitHub (source-available, not open source)
-- **Binaries:** GitHub Actions builds for Linux, macOS (Intel + Apple Silicon), Windows
-- **Updates:** Automatic via Tauri updater fetching from GitHub releases
+- `src-tauri/src/lib.rs` — App init, menu setup, plugin registration, command routing
+- `src-tauri/src/commands.rs` — Tauri command handlers (thin wrappers over `db.rs`)
+- `src-tauri/src/db.rs` — All PostgreSQL introspection SQL
+- `src-tauri/src/store.rs` — `#[cfg(dev)]` JSON file backend + `#[cfg(not(dev))]` keyring backend
+- `src/lib/tauri-api.ts` — Frontend typed wrapper for all `invoke()` calls
+- `src/lib/store.ts` — Zustand store; persists UI state to localStorage, DB configs to Rust store
+- `src/components/MenuListener.tsx` — Listens to native menu events from Rust
 
-## Key Decisions
+## Release workflow
 
-- PostgreSQL-only (no MySQL/SQLite — depth over breadth)
-- Native OS title bar and menus (no custom chrome)
-- Single repo, no monorepo tooling
-- New connection is a dedicated page, not a modal
+1. Push a tag `v*` → triggers `.github/workflows/release.yml`
+2. Builds: Linux (`.AppImage`, `.deb`), macOS Intel + Apple Silicon (`.dmg`), Windows (`.msi`)
+3. Requires `TAURI_SIGNING_PRIVATE_KEY` secret for updater signing
+4. Release is created as **draft** — manually publish to make `latest.json` live
+5. Download artifacts from draft release, upload to Lemon Squeezy product page
+6. Existing buyers get update emails from Lemon Squeezy when you upload new files
 
-## Dev Workflow
+## Critical constraints
 
-```bash
-pnpm tauri dev          # Dev mode (JSON file storage)
-pnpm exec tsc --noEmit  # TypeScript check
-cd src-tauri && cargo check  # Rust check
-```
+- **Static export only.** No API routes, no server-side rendering. The old `src/app/api/` was deleted.
+- **PostgreSQL only.** No abstraction for other databases. All SQL is Postgres-specific.
+- **Native title bar.** `decorations: true` in Tauri config. No custom window chrome.
+- **Single repo.** No monorepo tooling (removed `turbo`, `pnpm-workspace`).
+- **License:** PolyForm Noncommercial 1.0.0. Commercial use requires purchase ($10 on Lemon Squeezy).
+- **Repo must be public** for auto-updater to fetch `latest.json` from GitHub releases.
 
-## Release Workflow
+## Known gotchas
 
-1. Push a tag (`v*`)
-2. GitHub Actions builds for all platforms
-3. Download artifacts and upload to Lemon Squeezy
-4. Publish GitHub release (enables auto-updater)
-
-## Critical Files
-
-- `src-tauri/tauri.conf.json` — Tauri config, updater endpoints
-- `src-tauri/src/store.rs` — Conditional storage (JSON dev / keyring prod)
-- `src-tauri/src/lib.rs` — Native menus, updater plugin registration
-- `src/lib/store.ts` — Zustand store with Tauri persistence
-- `src/lib/tauri-api.ts` — Frontend wrapper for `invoke()`
+- `pnpm tauri build` is the correct build command. Do not pass `tauriScript: pnpm tauri build` to `tauri-action` — it appends `build` and creates `build build`.
+- Release workflow needs `permissions: contents: write` at the **workflow level**, not job level, or release creation fails with "Resource not accessible by integration".
+- `archive/` holds old playground code — excluded from TypeScript (`tsconfig.json` `exclude`) but still in repo.
+- The frontend uses `nuqs` for URL state in the studio routes (dashboard, query, etc.). The home/settings pages do not use query params.
