@@ -19,7 +19,7 @@ jobs:
           node-version: lts/*
           cache: pnpm
       - run: pnpm install
-      - run: pnpm exec tsc --noEmit
+      - run: cd apps/pgviz && pnpm exec tsc --noEmit
 
   rust-check:
     runs-on: ubuntu-latest
@@ -30,4 +30,4 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - run: cd src-tauri && cargo check
+      - run: cd apps/pgviz/src-tauri && cargo check
