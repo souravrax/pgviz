@@ -1,0 +1,63 @@
+---
+const features = [
+  {
+    step: '01',
+    name: 'Schema Visualization',
+    description:
+      'Interactive ER diagrams generated from your PostgreSQL database. See tables, columns, and relationships at a glance.',
+  },
+  {
+    step: '02',
+    name: 'Query Explorer',
+    description:
+      'Browse table data with filtering, sorting, and pagination. No more writing SELECT * just to peek at rows.',
+  },
+  {
+    step: '03',
+    name: 'SQL Execution',
+    description:
+      'Write and run queries with full syntax highlighting via CodeMirror. Results formatted in a clean data grid.',
+  },
+  {
+    step: '04',
+    name: 'Query Analysis',
+    description:
+      'Run EXPLAIN plans with visual breakdowns. Understand query performance without memorizing Postgres internals.',
+  },
+  {
+    step: '05',
+    name: 'Metadata Browser',
+    description:
+      'Explore triggers, functions, views, extensions, constraints, sequences, and more in one unified interface.',
+  },
+  {
+    step: '06',
+    name: 'Native & Fast',
+    description:
+      'Built with Rust and Tauri. Not an Electron app. Starts instantly, feels native, stays out of your way.',
+  },
+];
+---
+
+<section class="py-16 sm:py-20">
+  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="flex flex-col gap-12 sm:gap-16">
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Features</h2>
+      <div class="grid gap-8 lg:grid-cols-3">
+        {
+          features.map((feature) => (
+            <div class="bg-primary-500/10 dark:bg-primary-400/10 flex flex-col gap-12 rounded-3xl px-6 py-8">
+              <p class="text-sm">{feature.step}</p>
+              <div class="flex flex-col gap-4">
+                <h3 class="text-xl font-medium">{feature.name}</h3>
+                <p class="text-primary-950/70 dark:text-primary-200/70 text-base sm:text-lg">
+                  {feature.description}
+                </p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
