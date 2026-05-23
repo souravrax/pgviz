@@ -1,40 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useStore } from 'zustand'
 import { schemaStore } from '@/lib/store'
-import type { DatabaseConfig } from '@/lib/store'
-import { AddDatabaseDialog } from '@/components/AddDatabaseDialog'
+import type { DatabaseConfig } from '@/lib/tauri-api'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-import { Database, FlaskConical, LayoutDashboardIcon, Plus, Trash2 } from 'lucide-react'
-import { ModeToggle } from '@/components/mode-toggle'
+import { Database, Plus, Trash2, Settings, ArrowRight } from 'lucide-react'
 
 export default function Home() {
   const router = useRouter()
   const databases = useStore(schemaStore, (s) => s.databases)
-  const addDatabase = useStore(schemaStore, (s) => s.addDatabase)
   const deleteDatabase = useStore(schemaStore, (s) => s.deleteDatabase)
   const setActiveDatabase = useStore(schemaStore, (s) => s.setActiveDatabase)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
-  const handleAdd = (name: string, url: string) => {
-    try {
-      addDatabase(name, url)
-      setError(null)
-    } catch {
-      setError('Failed to add database')
-    }
-  }
+  useEffect(() => {
+    schemaStore.getState()._loadDatabases()
+  }, [])
 
-  const handleRemove = (id: string) => {
+  const handleRemove = async (id: string) => {
     try {
-      deleteDatabase(id)
-      setError(null)
+      await deleteDatabase(id)
     } catch {
-      setError('Failed to remove database')
+      // handled silently
     }
   }
 
@@ -44,103 +33,111 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center">
-      <header className="flex py-2 shrink-0 items-center gap-3 px-6 sticky top-0 z-10 bg-background/50 backdrop-blur-xl max-w-4xl w-full">
-        <div className="ml-auto">
-          <ModeToggle />
+    <div className="flex min-h-screen flex-col">
+      {/* Header */}
+      <header className="flex h-12 shrink-0 items-center justify-between border-b px-6">
+        <div className="flex items-center gap-2">
+          <Database className="size-5 text-primary" />
+          <span className="text-sm font-semibold">pgviz</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/settings')}
+            title="Settings"
+          >
+            <Settings className="size-4 text-muted-foreground" />
+          </Button>
         </div>
       </header>
 
-      <main className="flex flex-1 flex-col items-center px-6 py-16 w-full">
-        <div className="w-full max-w-4xl">
-          <div className="mb-12 text-center">
-            <div className="flex items-center gap-2 flex-col">
-              <div className="flex p-4 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <LayoutDashboardIcon className="size-8" />
-              </div>
-              <h1 className="mb-2 text-2xl font-bold tracking-tight">pgviz</h1>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Manage and explore your PostgreSQL databases
+      {/* Main */}
+      <main className="flex-1 px-6 py-8">
+        <div className="mx-auto max-w-3xl">
+          {/* Title */}
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Manage your PostgreSQL database connections
             </p>
           </div>
 
-          {error && (
-            <div className="mb-8 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-center">
-              <p className="text-sm font-medium text-destructive">{error}</p>
-            </div>
-          )}
-
-          <div className="mb-8 rounded-lg border p-4 bg-muted/20">
-            <div className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <FlaskConical className="size-5" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold">Migration Playground</h3>
-                <p className="text-xs text-muted-foreground">
-                  Write and test PostgreSQL migrations in a safe sandbox with real-time schema
-                  visualization
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push('/playground')}
-              >
-                Launch
-              </Button>
-            </div>
-          </div>
-
+          {/* Toolbar */}
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Databases</h2>
-            <Button onClick={() => setDialogOpen(true)}>
+            <span className="text-sm font-medium text-muted-foreground">
+              {databases.length} connection{databases.length !== 1 ? 's' : ''}
+            </span>
+            <Button
+              size="sm"
+              onClick={() => router.push('/connections/new')}
+            >
               <Plus className="size-4 mr-1.5" />
-              Add Database
+              New Connection
             </Button>
           </div>
 
+          {/* Empty State */}
           {databases.length === 0 && (
-            <div className="rounded-lg border border-dashed p-10 text-center">
-              <Database className="mx-auto mb-3 size-8 text-muted-foreground/40" />
-              <p className="text-sm font-medium text-muted-foreground">No databases added yet</p>
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                <Database className="size-6 text-muted-foreground" />
+              </div>
+              <p className="mt-4 text-sm font-medium">No connections yet</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Click &quot;Add Database&quot; to connect your first PostgreSQL database
+                Add a connection to start exploring your database
               </p>
+              <Button
+                className="mt-4"
+                size="sm"
+                onClick={() => router.push('/connections/new')}
+              >
+                <Plus className="size-4 mr-1.5" />
+                New Connection
+              </Button>
             </div>
           )}
 
+          {/* Connection List */}
           {databases.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-3">
               {databases.map((db) => (
                 <Card
                   key={db.id}
-                  className="cursor-pointer hover:border-primary/30 transition-colors"
+                  className="group cursor-pointer transition-colors hover:border-primary/40 hover:bg-muted/20"
                   onClick={() => handleSelect(db)}
                 >
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Database className="size-4 text-muted-foreground" />
-                      {db.name}
-                    </CardTitle>
-                    <CardDescription>
-                      Added {new Date(db.createdAt).toLocaleDateString()}
-                    </CardDescription>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                          <Database className="size-4 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-base">{db.name}</CardTitle>
+                          <CardDescription className="text-xs font-mono">
+                            {db.url.replace(/(:\/\/[^:\/]+:)[^@]+(@)/, '$1*****$2')}
+                          </CardDescription>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                        <Button
+                          variant="ghost"
+                          size="icon-xs"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleRemove(db.id)
+                          }}
+                        >
+                          <Trash2 className="size-4" />
+                        </Button>
+                        <ArrowRight className="size-4 text-muted-foreground" />
+                      </div>
+                    </div>
                   </CardHeader>
-                  <CardFooter className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="icon-xs"
-                      className="text-muted-foreground hover:text-destructive"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleRemove(db.id)
-                      }}
-                    >
-                      <Trash2 className="size-4" />
-                      <span className="sr-only">Remove database</span>
-                    </Button>
+                  <CardFooter className="pt-0 text-xs text-muted-foreground">
+                    Added {new Date(db.createdAt).toLocaleDateString()}
                   </CardFooter>
                 </Card>
               ))}
@@ -148,13 +145,6 @@ export default function Home() {
           )}
         </div>
       </main>
-
-      <AddDatabaseDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onSubmit={handleAdd}
-        existingNames={databases.map((d) => d.name)}
-      />
     </div>
   )
 }

@@ -1,19 +1,20 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware'
-import { get, set, del } from 'idb-keyval'
-import type { Schema } from '@/lib/extract'
+import { persist, createJSONStorage } from 'zustand/middleware'
+import {
+  getDatabases,
+  addDatabase as tauriAddDatabase,
+  removeDatabase as tauriRemoveDatabase,
+} from '@/lib/tauri-api'
+import type { DatabaseConfig } from '@/lib/tauri-api'
+import type { Schema } from '@/lib/tauri-api'
+export type { DatabaseConfig } from '@/lib/tauri-api'
 
-export type DatabaseConfig = {
-  id: string
-  name: string
-  url: string
-  createdAt: number
-}
+let storeLoaded = false
 
 type SchemaStore = {
   databases: DatabaseConfig[]
-  addDatabase: (name: string, url: string) => void
-  deleteDatabase: (id: string) => void
+  addDatabase: (name: string, url: string) => Promise<void>
+  deleteDatabase: (id: string) => Promise<void>
   activeDatabase: DatabaseConfig | null
   setActiveDatabase: (db: DatabaseConfig | null) => void
   schemas: string[]
@@ -21,42 +22,33 @@ type SchemaStore = {
   selectedSchema: string
   setSelectedSchema: (schema: string) => void
   schema: Schema | null
-  setSchema: (schema: Schema) => void
+  setSchema: (schema: Schema | null) => void
   selectedTable: string | null
   setSelectedTable: (table: string | null) => void
   search: string
   setSearch: (search: string) => void
-}
-
-const idbStorage: StateStorage = {
-  getItem: async (name) => {
-    const value = await get(name)
-    return value ?? null
-  },
-  setItem: async (name, value) => {
-    await set(name, value)
-  },
-  removeItem: async (name) => {
-    await del(name)
-  },
+  _loadDatabases: () => Promise<void>
 }
 
 export const schemaStore = create<SchemaStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       databases: [],
-      addDatabase: (name, url) =>
+      addDatabase: async (name, url) => {
+        const id = crypto.randomUUID()
+        const createdAt = Date.now()
+        await tauriAddDatabase(id, name, url, createdAt)
         set((s) => ({
-          databases: [
-            ...s.databases,
-            { id: crypto.randomUUID(), name, url, createdAt: Date.now() },
-          ],
-        })),
-      deleteDatabase: (id) =>
+          databases: [...s.databases, { id, name, url, createdAt }],
+        }))
+      },
+      deleteDatabase: async (id) => {
+        await tauriRemoveDatabase(id)
         set((s) => ({
           databases: s.databases.filter((d) => d.id !== id),
           activeDatabase: s.activeDatabase?.id === id ? null : s.activeDatabase,
-        })),
+        }))
+      },
       activeDatabase: null,
       setActiveDatabase: (db) => set({ activeDatabase: db, schema: null, selectedTable: null }),
       schemas: [],
@@ -71,12 +63,21 @@ export const schemaStore = create<SchemaStore>()(
         set((s) => ({ selectedTable: s.selectedTable === table ? null : table })),
       search: '',
       setSearch: (search) => set({ search }),
+      _loadDatabases: async () => {
+        if (storeLoaded) return
+        try {
+          const dbs = await getDatabases()
+          set({ databases: dbs })
+          storeLoaded = true
+        } catch (err) {
+          console.error('Failed to load databases from store:', err)
+        }
+      },
     }),
     {
-      name: 'pgviz-db',
-      storage: createJSONStorage(() => idbStorage),
+      name: 'pgviz-ui-state',
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        databases: state.databases,
         activeDatabase: state.activeDatabase,
         selectedSchema: state.selectedSchema,
       }),

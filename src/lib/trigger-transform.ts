@@ -1,6 +1,6 @@
 import ELK from 'elkjs/lib/elk.bundled.js'
 import type { Node, Edge } from 'reactflow'
-import type { Schema, Trigger, Function as PgFunction } from './extract'
+import type { Schema, Trigger, Function as PgFunction } from './tauri-api'
 
 export type TriggerNodeData =
   | { type: 'table'; name: string; triggerCount: number }

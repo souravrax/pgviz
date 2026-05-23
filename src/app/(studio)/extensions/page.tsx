@@ -3,8 +3,8 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useStore } from 'zustand'
 import { schemaStore } from '@/lib/store'
-import type { Extension, AvailableExtension } from '@/lib/extract'
-import { secureFetch } from '@/lib/api-client'
+import type { Extension, AvailableExtension } from '@/lib/tauri-api'
+import { listExtensions, installExtension, dropExtension } from '@/lib/tauri-api'
 import { Loader2, Puzzle, Plus, Search, Check, Package, Trash2, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -62,12 +62,7 @@ export default function ExtensionsPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await secureFetch('/api/extensions', activeDatabase.url, { signal })
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Failed to fetch extensions')
-      }
-      const data = await res.json()
+      const data = await listExtensions(activeDatabase.url)
       setInstalled(data.installed ?? [])
       setAvailable(data.available ?? [])
     } catch (err) {
@@ -112,18 +107,7 @@ export default function ExtensionsPage() {
     if (!activeDatabase || !selectedExtToInstall) return
     setActionLoading(selectedExtToInstall.name)
     try {
-      const res = await secureFetch('/api/extensions', activeDatabase.url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: selectedExtToInstall.name,
-          schema: installSchema,
-        }),
-      })
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Failed to install extension')
-      }
+      await installExtension(activeDatabase.url, selectedExtToInstall.name, installSchema)
       await fetchExtensions()
       setSelectedExtToInstall(null)
     } catch (err) {
@@ -137,15 +121,7 @@ export default function ExtensionsPage() {
     if (!activeDatabase) return
     setActionLoading(ext.name)
     try {
-      const res = await secureFetch(
-        `/api/extensions?name=${encodeURIComponent(ext.name)}`,
-        activeDatabase.url,
-        { method: 'DELETE' },
-      )
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Failed to uninstall extension')
-      }
+      await dropExtension(activeDatabase.url, ext.name)
       await fetchExtensions()
       setConfirmUninstall(null)
     } catch (err) {

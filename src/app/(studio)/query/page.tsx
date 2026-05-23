@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { useStore } from 'zustand'
 import { schemaStore } from '@/lib/store'
 import { Play, Loader2 } from 'lucide-react'
-import { secureFetch } from '@/lib/api-client'
+import { executeSql } from '@/lib/tauri-api'
 
 type QueryResult = {
   rows: Record<string, unknown>[]
@@ -31,16 +31,13 @@ export default function QueryPage() {
     setResult(null)
 
     try {
-      const res = await secureFetch('/api/execute', activeDatabase.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sql: trimmed }),
+      const data = await executeSql(activeDatabase.url, trimmed)
+      setResult({
+        rows: data.rows,
+        columns: data.columns,
+        rowCount: data.row_count,
+        duration: data.duration,
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Query failed')
-      setResult(data)
       setHistory((h) => [trimmed, ...h].slice(0, 20))
     } catch (err) {
       setError((err as Error).message)

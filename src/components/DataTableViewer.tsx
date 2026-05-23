@@ -21,7 +21,7 @@ import { Badge } from '@/components/ui/badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { getValidFilters } from '@/lib/data-table'
 import type { ExtendedColumnFilter } from '@/types/data-table'
-import { secureFetch } from '@/lib/api-client'
+import { queryTable } from '@/lib/tauri-api'
 
 type ColumnInfo = { name: string; type: string }
 
@@ -117,13 +117,22 @@ export default function DataTableViewer({ selectedTable, schema = 'public' }: Pr
     }
 
     try {
-      const res = await secureFetch(`/api/query?${params}`, activeDatabase.url)
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || 'Query failed')
-      }
-      const result: QueryResult = await res.json()
-      setData(result)
+      const result = await queryTable(
+        activeDatabase.url,
+        selectedTable,
+        schema,
+        page,
+        perPage,
+        sorting.length > 0 ? `${sorting[0].id}:${sorting[0].desc ? 'desc' : 'asc'}` : undefined,
+        validFilters.length > 0 ? JSON.stringify(validFilters) : undefined,
+      )
+      setData({
+        rows: result.rows,
+        total: result.total,
+        page: result.page,
+        pageSize: result.page_size,
+        columns: result.columns.map((c) => ({ name: c.name, type: c.type })),
+      })
     } catch (err) {
       setError((err as Error).message)
     } finally {

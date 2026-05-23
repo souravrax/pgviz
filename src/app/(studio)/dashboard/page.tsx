@@ -16,7 +16,7 @@ import {
   Copy,
   Check,
 } from 'lucide-react'
-import { secureFetch } from '@/lib/api-client'
+import { listSchemas, getSchema } from '@/lib/tauri-api'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
@@ -48,8 +48,7 @@ export default function DashboardPage() {
       return
     }
 
-    secureFetch('/api/schemas', activeDatabase.url)
-      .then((res) => res.json())
+    listSchemas(activeDatabase.url)
       .then((data) => {
         if (Array.isArray(data)) setSchemas(data)
       })
@@ -59,17 +58,12 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!activeDatabase) return
 
-    secureFetch(`/api/schema?schema=${encodeURIComponent(selectedSchema)}`, activeDatabase.url)
-      .then(async (res) => {
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Failed to fetch schema')
-        }
+    getSchema(activeDatabase.url, selectedSchema)
+      .then((schema) => {
         setError(null)
-        return res.json()
+        setSchema(schema)
       })
-      .then(setSchema)
-      .catch((err) => setError(err.message))
+      .catch((err: Error) => setError(err.message))
   }, [selectedSchema, setSchema, activeDatabase])
 
   if (!activeDatabase) {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useStore } from 'zustand'
 import { schemaStore } from '@/lib/store'
-import type { Metadata, Trigger, Function as PgFunction } from '@/lib/extract'
+import type { Metadata, Trigger, Function as PgFunction } from '@/lib/tauri-api'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Table,
@@ -22,7 +22,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Loader2 } from 'lucide-react'
-import { secureFetch } from '@/lib/api-client'
+import { getMetadata } from '@/lib/tauri-api'
 
 type CodePanelState =
   | { type: 'trigger'; item: Trigger }
@@ -42,23 +42,14 @@ export default function MetadataPage() {
   useEffect(() => {
     if (!activeDatabase) return
     const controller = new AbortController()
-    secureFetch(`/api/metadata?schema=${encodeURIComponent(selectedSchema)}`, activeDatabase.url, {
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Failed to fetch metadata')
-        }
-        return res.json()
-      })
+    getMetadata(activeDatabase.url, selectedSchema)
       .then((data) => {
         setError(null)
         setMetadata(data)
         setMetadataSchema(selectedSchema)
       })
-      .catch((err) => {
-        if (err.name !== 'AbortError') setError(err.message)
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : String(err))
       })
     return () => controller.abort()
   }, [selectedSchema, activeDatabase])

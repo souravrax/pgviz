@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ModeToggle } from '@/components/mode-toggle'
-import { secureFetch } from '@/lib/api-client'
+import { getSchema } from '@/lib/tauri-api'
 import {
   Dialog,
   DialogContent,
@@ -21,8 +21,8 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { DatabaseIcon } from 'lucide-react'
-import type { DatabaseConfig } from '@/lib/store'
+import { DatabaseIcon, Settings } from 'lucide-react'
+import type { DatabaseConfig } from '@/lib/tauri-api'
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -40,17 +40,12 @@ export default function StudioLayout({ children }: { children: React.ReactNode }
       return
     }
 
-    secureFetch(`/api/schema?schema=${encodeURIComponent(selectedSchema)}`, activeDatabase.url)
-      .then(async (res) => {
+    getSchema(activeDatabase.url, selectedSchema)
+      .then((schema) => {
         setError(null)
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Failed to fetch schema')
-        }
-        return res.json()
+        setSchema(schema)
       })
-      .then(setSchema)
-      .catch((err) => setError(err.message))
+      .catch((err: Error) => setError(err.message))
   }, [selectedSchema, setSchema, activeDatabase, router])
 
   if (!activeDatabase) {
@@ -131,6 +126,14 @@ export default function StudioLayout({ children }: { children: React.ReactNode }
                   </div>
                 </DialogContent>
               </Dialog>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={() => router.push('/settings')}
+                title="Settings"
+              >
+                <Settings className="size-4" />
+              </Button>
               <ModeToggle />
             </div>
           </header>

@@ -36,7 +36,7 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
-import { secureFetch } from '@/lib/api-client'
+import { listSchemas } from '@/lib/tauri-api'
 
 const navMain = [
   { title: 'Dashboard', path: '/dashboard', icon: LayoutDashboardIcon },
@@ -68,8 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   React.useEffect(() => {
     if (!activeDatabase) return
-    secureFetch('/api/schemas', activeDatabase.url)
-      .then((res) => res.json())
+    listSchemas(activeDatabase.url)
       .then((data) => {
         if (Array.isArray(data)) setSchemas(data)
       })

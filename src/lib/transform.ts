@@ -1,5 +1,5 @@
 import ELK from 'elkjs/lib/elk.bundled.js'
-import type { Schema } from './extract'
+import type { Schema } from './tauri-api'
 import type { Node, Edge } from 'reactflow'
 
 const NODE_WIDTH = 280

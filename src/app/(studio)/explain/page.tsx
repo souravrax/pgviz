@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { useStore } from 'zustand'
 import { schemaStore } from '@/lib/store'
 import { Play, Loader2, Route, AlertCircle, CircleHelp } from 'lucide-react'
-import { secureFetch } from '@/lib/api-client'
+import { explainSql } from '@/lib/tauri-api'
 import ExplainGraph, { type ExplainResult } from '@/components/ExplainGraph'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -38,16 +38,13 @@ export default function ExplainPage() {
     setResult(null)
 
     try {
-      const res = await secureFetch('/api/explain', activeDatabase.url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sql: trimmed, analyze, buffers }),
+      const data = await explainSql(activeDatabase.url, trimmed, analyze, buffers)
+      setResult({
+        plan: data.plan,
+        planningTime: data.planning_time,
+        executionTime: data.execution_time,
+        settings: data.settings as Record<string, string> | null,
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Explain failed')
-      setResult(data)
       setHistory((h) => [trimmed, ...h].slice(0, 20))
     } catch (err) {
       setError((err as Error).message)

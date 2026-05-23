@@ -20,8 +20,8 @@ import {
   applyTriggerElkLayout,
   type TriggerNodeData,
 } from '@/lib/trigger-transform'
-import { secureFetch } from '@/lib/api-client'
-import type { Metadata, Trigger, Function as PgFunction } from '@/lib/extract'
+import { getMetadata } from '@/lib/tauri-api'
+import type { Metadata, Trigger, Function as PgFunction } from '@/lib/tauri-api'
 
 import { X, Zap, Table, AlertCircle, Maximize2, Braces } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -62,23 +62,14 @@ function FlowGraph() {
   useEffect(() => {
     if (!activeDatabase) return
     const controller = new AbortController()
-    secureFetch(`/api/metadata?schema=${encodeURIComponent(selectedSchema)}`, activeDatabase.url, {
-      signal: controller.signal,
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}))
-          throw new Error(err.error || 'Failed to fetch metadata')
-        }
-        return res.json()
-      })
-      .then((data: Metadata) => {
+    getMetadata(activeDatabase.url, selectedSchema)
+      .then((data) => {
         setError(null)
         setMetadata(data)
         setMetadataSchema(selectedSchema)
       })
-      .catch((err) => {
-        if (err.name !== 'AbortError') setError(err.message)
+      .catch((err: Error) => {
+        setError(err.message)
       })
     return () => controller.abort()
   }, [selectedSchema, activeDatabase])

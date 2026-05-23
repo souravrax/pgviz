@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 }
 
 import { ThemeProvider } from '@/components/theme-provider'
+import { MenuListener } from '@/components/MenuListener'
 
 const merriweatherHeading = Merriweather({ subsets: ['latin'], variable: '--font-heading' })
 
@@ -48,6 +49,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <MenuListener />
           <NuqsAdapter>{children}</NuqsAdapter>
         </ThemeProvider>
       </body>
