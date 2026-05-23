@@ -20,7 +20,7 @@ export function LicenseBanner() {
       <p>
         <span className="font-semibold">Personal use is free.</span> Commercial use requires a license —{' '}
         <a
-          href="https://pgviz.lemonsqueezy.com/"
+          href="https://pgviz.lemonsqueezy.com/checkout"
           target="_blank"
           rel="noopener noreferrer"
           className="underline"

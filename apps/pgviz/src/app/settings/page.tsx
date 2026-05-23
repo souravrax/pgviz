@@ -271,7 +271,7 @@ export default function SettingsPage() {
                       <p className="text-xs text-destructive">{licenseError}</p>
                     )}
                     <a
-                      href="https://pgviz.lemonsqueezy.com/"
+                      href="https://pgviz.lemonsqueezy.com/checkout"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
@@ -305,7 +305,7 @@ export default function SettingsPage() {
                 <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
                   Licensed under Business Source License 1.1 (BSL 1.1).
                   Free for personal, educational, and non-commercial use.
-                  Commercial use requires a license — available at pgviz.lemonsqueezy.com
+                  Commercial use requires a license — available at pgviz.lemonsqueezy.com/checkout
                 </p>
               </div>
             </section>

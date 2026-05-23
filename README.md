@@ -17,7 +17,7 @@ A fast, native desktop app for visualizing and exploring PostgreSQL databases.
 
 ## Download
 
-**[Buy on Lemon Squeezy — From $15](https://pgviz.lemonsqueezy.com/)**
+**[Buy on Lemon Squeezy — From $15](https://pgviz.lemonsqueezy.com/checkout)**
 
 Available for macOS (Intel & Apple Silicon), Windows, and Linux.
 
@@ -51,7 +51,7 @@ cd src-tauri && cargo check
 Business Source License 1.1 (BSL 1.1)
 
 - **Personal, educational, non-commercial:** Free
-- **Commercial use:** Requires a license — available at [pgviz.lemonsqueezy.com](https://pgviz.lemonsqueezy.com/)
+- **Commercial use:** Requires a license — available at [pgviz.lemonsqueezy.com](https://pgviz.lemonsqueezy.com/checkout)
 
 The source code is public for transparency and community contribution. The compiled binaries (signed, auto-updating, and convenient) are the product being sold. After 3 years, each version automatically becomes fully open source under Apache 2.0.
 
