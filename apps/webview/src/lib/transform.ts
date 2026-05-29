@@ -54,7 +54,7 @@ export function schemaToGraph(schema: Schema): {
     target: rel.toTable,
     type: 'default',
     animated: false,
-    style: { stroke: '#4a4a6a', strokeWidth: 1.5 },
+    style: { stroke: 'var(--color-border)', strokeWidth: 1.5 },
     markerEnd: 'arrowclosed',
   }))
 
