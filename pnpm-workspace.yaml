@@ -2,3 +2,4 @@ packages:
   - 'apps/*'
   - 'apps/vscode-extension'
   - 'apps/webview'
+  - 'apps/api'

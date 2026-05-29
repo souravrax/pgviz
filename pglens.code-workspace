@@ -1,12 +1,8 @@
 {
   "folders": [
     {
-      "name": "pglens-vscode",
+      "name": "extension",
       "path": "apps/vscode-extension"
-    },
-    {
-      "name": "landing",
-      "path": "apps/landing"
     },
     {
       "name": "root",

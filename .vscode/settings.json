@@ -3,52 +3,52 @@
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
 
-    // — Package & project root files —
+    // -- Package & project root files --
     "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc, .nvmrc, .node-version, turbo.json, nx.json, lerna.json, rush.json, .yarnrc, .yarnrc.yml",
 
-    // — TypeScript —
+    // -- TypeScript --
     "tsconfig.json": "tsconfig.*.json, tsconfig-*.json",
     "*.ts": "${capture}.js, ${capture}.js.map, ${capture}.d.ts, ${capture}.d.ts.map, ${capture}.test.ts, ${capture}.spec.ts, ${capture}.stories.ts",
 
-    // — React / TSX —
+    // -- React / TSX --
     "*.tsx": "${capture}.test.tsx, ${capture}.spec.tsx, ${capture}.stories.tsx, ${capture}.stories.ts, ${capture}.module.css, ${capture}.module.scss, ${capture}.module.sass, ${capture}.css, ${capture}.scss",
 
-    // — Vue —
+    // -- Vue --
     "*.vue": "${capture}.test.ts, ${capture}.spec.ts, ${capture}.stories.ts",
 
-    // — Svelte —
+    // -- Svelte --
     "*.svelte": "${capture}.test.ts, ${capture}.spec.ts, ${capture}.stories.ts",
 
-    // — JavaScript —
+    // -- JavaScript --
     "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts, ${capture}.test.js, ${capture}.spec.js, ${capture}.stories.js",
     "*.jsx": "${capture}.test.jsx, ${capture}.spec.jsx, ${capture}.stories.jsx, ${capture}.module.css, ${capture}.module.scss",
 
-    // — Vite —
+    // -- Vite --
     "vite.config.ts": "vite.config.*.ts, vitest.config.ts, vitest.config.*.ts",
     "vite.config.js": "vite.config.*.js, vitest.config.js, vitest.config.*.js",
 
-    // — Next.js —
+    // -- Next.js --
     "next.config.js": "next.config.*.js, next-env.d.ts, next-sitemap.config.js",
     "next.config.ts": "next.config.*.ts, next-env.d.ts",
     "next.config.mjs": "next.config.*.mjs, next-env.d.ts",
 
-    // — Nuxt —
+    // -- Nuxt --
     "nuxt.config.ts": "nuxt.config.*.ts, .nuxtignore, .nuxtrc",
     "nuxt.config.js": "nuxt.config.*.js, .nuxtignore, .nuxtrc",
 
-    // — Astro —
+    // -- Astro --
     "astro.config.ts": "astro.config.*.ts",
     "astro.config.mjs": "astro.config.*.mjs",
 
-    // — Remix —
+    // -- Remix --
     "remix.config.js": "remix.config.*.js, remix.env.d.ts",
 
-    // — Tailwind —
+    // -- Tailwind --
     "tailwind.config.js": "tailwind.config.*.js, postcss.config.js, postcss.config.*.js",
     "tailwind.config.ts": "tailwind.config.*.ts, postcss.config.ts, postcss.config.*.ts",
     "tailwind.config.mjs": "tailwind.config.*.mjs, postcss.config.mjs",
 
-    // — Testing —
+    // -- Testing --
     "jest.config.js": "jest.config.*.js, jest.setup.js, jest.setup.*.js",
     "jest.config.ts": "jest.config.*.ts, jest.setup.ts, jest.setup.*.ts",
     "vitest.config.ts": "vitest.config.*.ts, vitest.setup.ts",
@@ -56,7 +56,7 @@
     "cypress.config.ts": "cypress.config.*.ts",
     "cypress.config.js": "cypress.config.*.js",
 
-    // — Linting & formatting —
+    // -- Linting & formatting --
     ".eslintrc.js": ".eslintignore, .eslintrc.*.js",
     ".eslintrc.json": ".eslintignore, .eslintrc.*.json",
     ".eslintrc.cjs": ".eslintignore",
@@ -66,44 +66,44 @@
     ".prettierrc.js": ".prettierignore, .prettierrc.*, prettier.config.*",
     ".prettierrc.json": ".prettierignore",
 
-    // — Environment files —
+    // -- Environment files --
     ".env": ".env.*, .envrc",
     ".env.local": ".env.development.local, .env.test.local, .env.production.local",
 
-    // — Docker —
+    // -- Docker --
     "Dockerfile": "Dockerfile.*, .dockerignore, docker-compose.yml, docker-compose.*.yml",
     "docker-compose.yml": "docker-compose.*.yml, .dockerignore",
 
-    // — CI/CD —
+    // -- CI/CD --
     ".github": ".gitignore, .gitattributes, .gitmodules",
 
-    // — README & docs —
+    // -- README & docs --
     "README.md": "README.*, CHANGELOG.md, CHANGELOG.*, LICENSE, LICENSE.*, CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md",
 
-    // — Rust —
+    // -- Rust --
     "Cargo.toml": "Cargo.lock, .cargo",
 
-    // — Go —
+    // -- Go --
     "go.mod": "go.sum, go.work, go.work.sum",
 
-    // — Python —
+    // -- Python --
     "pyproject.toml": "poetry.lock, .python-version, requirements*.txt, setup.cfg, setup.py, MANIFEST.in, .flake8, mypy.ini, .mypy.ini",
     "requirements.txt": "requirements-*.txt, requirements.*.txt",
 
-    // — CSS / Styling —
+    // -- CSS / Styling --
     "*.css": "${capture}.css.map",
     "*.scss": "${capture}.css, ${capture}.css.map",
 
-    // — GraphQL —
+    // -- GraphQL --
     "*.graphql": "${capture}.graphql.ts, ${capture}.generated.ts",
 
-    // — Prisma —
+    // -- Prisma --
     "schema.prisma": "*.prisma, prisma.yml",
 
-    // — Drizzle —
+    // -- Drizzle --
     "drizzle.config.ts": "drizzle.config.*.ts",
 
-    // — Config catchall —
+    // -- Config catchall --
     "*.config.ts": "${capture}.config.*.ts",
     "*.config.js": "${capture}.config.*.js",
     "*.config.mjs": "${capture}.config.*.mjs"

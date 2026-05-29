@@ -1,44 +1,8 @@
 import dagre from 'dagre'
 import type { Node, Edge } from 'reactflow'
+import type { Schema, Table } from 'api'
 
-export type Column = {
-  name: string
-  type: string
-  nullable: boolean
-  defaultValue: string | null
-}
-
-export type Index = {
-  name: string
-  columns: string[]
-  unique: boolean
-}
-
-export type Table = {
-  name: string
-  columns: Column[]
-  primaryKeys: string[]
-  indexes: Index[]
-}
-
-export type Relation = {
-  fromTable: string
-  fromColumn: string
-  toTable: string
-  toColumn: string
-  constraintName: string
-}
-
-export type Schema = {
-  name: string
-  tables: Table[]
-  relations: Relation[]
-}
-
-const NODE_WIDTH = 280
-const HEADER_HEIGHT = 44
-const ROW_HEIGHT = 28
-const FOOTER_PADDING = 12
+export type { Schema, Table } from 'api'
 
 export type TableNodeData = {
   table: Table
@@ -48,6 +12,11 @@ export type TableNodeData = {
     targetColumn: string
   }[]
 }
+
+const NODE_WIDTH = 280
+const HEADER_HEIGHT = 44
+const ROW_HEIGHT = 28
+const FOOTER_PADDING = 12
 
 function getNodeHeight(table: Table): number {
   return HEADER_HEIGHT + table.columns.length * ROW_HEIGHT + FOOTER_PADDING
