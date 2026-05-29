@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "name": "pgviz-vscode",
+      "path": "apps/pgviz-vscode"
+    },
+    {
+      "name": "landing",
+      "path": "apps/landing"
+    },
+    {
+      "name": "root",
+      "path": "."
+    }
+  ],
+  "settings": {}
+}
