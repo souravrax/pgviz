@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "webview",
+      "path": "apps/webview"
+    },
+    {
       "name": "api",
       "path": "apps/api"
     },
