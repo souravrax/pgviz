@@ -30,7 +30,7 @@ export class SchemaTreeProvider implements vscode.TreeDataProvider<SchemaNode> {
     item.iconPath = new vscode.ThemeIcon('table')
     item.contextValue = 'schema'
     item.command = {
-      command: 'pgviz.visualizeSchemaFromTree',
+      command: 'pglens.visualizeSchemaFromTree',
       title: 'Visualize Schema',
       arguments: [element],
     }
@@ -42,7 +42,7 @@ export class SchemaTreeProvider implements vscode.TreeDataProvider<SchemaNode> {
     if (!active) return []
 
     try {
-      const showInternal = vscode.workspace.getConfiguration('pgviz').get<boolean>('showInternalSchemas', false)
+      const showInternal = vscode.workspace.getConfiguration('pglens').get<boolean>('showInternalSchemas', false)
       const schemas = await listSchemas(active.url, showInternal)
       return schemas.map((name) => ({ type: 'schema' as const, name }))
     } catch (err) {

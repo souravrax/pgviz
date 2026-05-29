@@ -6,7 +6,7 @@ import type { Schema } from './db.js'
 const panelMap = new Map<string, vscode.WebviewPanel>()
 
 export function showSchemaVisualizer(context: vscode.ExtensionContext, schema: Schema) {
-  const panelId = `pgviz.schema.${schema.name}`
+  const panelId = `pglens.schema.${schema.name}`
 
   if (panelMap.has(panelId)) {
     const existing = panelMap.get(panelId)!
@@ -16,7 +16,7 @@ export function showSchemaVisualizer(context: vscode.ExtensionContext, schema: S
   }
 
   const panel = vscode.window.createWebviewPanel(
-    'pgviz.schema',
+    'pglens.schema',
     `Schema: ${schema.name}`,
     vscode.ViewColumn.One,
     {

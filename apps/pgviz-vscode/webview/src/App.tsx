@@ -17,9 +17,9 @@ export default function App() {
 
     const handler = (event: MessageEvent) => {
       const message = event.data
-      console.log('[pgviz webview] received message:', message?.type, message)
+      console.log('[pglens webview] received message:', message?.type, message)
       if (message?.type === 'schema') {
-        console.log('[pgviz webview] schema tables:', message.data?.tables?.length)
+        console.log('[pglens webview] schema tables:', message.data?.tables?.length)
         setSchema(message.data as Schema)
       }
     }

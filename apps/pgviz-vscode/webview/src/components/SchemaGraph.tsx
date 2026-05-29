@@ -42,7 +42,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
 
   const { nodes: rawNodes, edges: rawEdges } = useMemo(() => {
     const result = schemaToGraph(schema)
-    console.log('[pgviz graph] raw nodes:', result.nodes.length, 'edges:', result.edges.length)
+    console.log('[pglens graph] raw nodes:', result.nodes.length, 'edges:', result.edges.length)
     return result
   }, [schema])
 
@@ -51,7 +51,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
   const [layoutReady, setLayoutReady] = useState(false)
 
   useEffect(() => {
-    console.log('[pgviz graph] layout effect triggered, rawNodes:', rawNodes.length)
+    console.log('[pglens graph] layout effect triggered, rawNodes:', rawNodes.length)
     if (!rawNodes.length) {
       setLayoutReady(true)
       return
@@ -61,13 +61,13 @@ function FlowGraph({ schema }: { schema: Schema }) {
 
     try {
       const layouted = applyDagreLayout(rawNodes, rawEdges)
-      console.log('[pgviz graph] dagre layouted nodes:', layouted.length, 'first node pos:', layouted[0]?.position)
+      console.log('[pglens graph] dagre layouted nodes:', layouted.length, 'first node pos:', layouted[0]?.position)
       setNodes(layouted)
       setEdges(rawEdges)
       setLayoutReady(true)
       requestAnimationFrame(() => fitView({ padding: 0.15, duration: 300 }))
     } catch (err) {
-      console.error('[pgviz graph] Dagre layout failed:', err)
+      console.error('[pglens graph] Dagre layout failed:', err)
       setError('Layout failed, using fallback grid')
       const cols = Math.ceil(Math.sqrt(rawNodes.length))
       const gridNodes = rawNodes.map((n, i) => ({

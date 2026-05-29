@@ -5,7 +5,7 @@
       "label": "watch",
       "type": "shell",
       "command": "pnpm",
-      "args": ["--filter", "pgviz", "watch"],
+      "args": ["--filter", "pglens", "watch"],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -29,7 +29,7 @@
       "label": "compile",
       "type": "shell",
       "command": "pnpm",
-      "args": ["--filter", "pgviz", "compile"],
+      "args": ["--filter", "pglens", "compile"],
       "group": "build",
       "problemMatcher": "$esbuild"
     },
@@ -37,7 +37,7 @@
       "label": "build:webview",
       "type": "shell",
       "command": "pnpm",
-      "args": ["--filter", "pgviz", "build:webview"],
+      "args": ["--filter", "pglens", "build:webview"],
       "group": "build",
       "problemMatcher": []
     }

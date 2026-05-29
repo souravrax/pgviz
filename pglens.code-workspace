@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "name": "pgviz-vscode",
+      "name": "pglens-vscode",
       "path": "apps/pgviz-vscode"
     },
     {

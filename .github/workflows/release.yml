@@ -27,22 +27,22 @@ jobs:
         run: pnpm install
 
       - name: Build webview
-        run: pnpm --filter pgviz build:webview
+        run: pnpm --filter pglens build:webview
 
       - name: Compile extension
-        run: pnpm --filter pgviz compile
+        run: pnpm --filter pglens compile
 
       - name: Package extension
         run: |
-          cd apps/pgviz-vscode
+          cd apps/pglens-vscode
           pnpm exec vsce package --no-dependencies
 
       - name: Publish to VS Code Marketplace
         run: |
-          cd apps/pgviz-vscode
+          cd apps/pglens-vscode
           pnpm exec vsce publish --no-dependencies -p ${{ secrets.VSCE_TOKEN }}
 
       - name: Publish to Open VSX
         run: |
-          cd apps/pgviz-vscode
+          cd apps/pglens-vscode
           pnpm exec ovsx publish *.vsix -p ${{ secrets.OVSX_TOKEN }}

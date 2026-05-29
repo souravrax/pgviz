@@ -1,15 +1,15 @@
 {
-  "name": "pgviz-monorepo",
+  "name": "pglens-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Monorepo for pgviz — a VS Code extension for visualizing PostgreSQL schemas as ER diagrams",
+  "description": "Monorepo for pglens — a VS Code extension for visualizing PostgreSQL schemas as ER diagrams",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
-    "dev": "pnpm --filter pgviz watch",
-    "build": "pnpm --filter pgviz build",
+    "dev": "pnpm --filter pglens watch",
+    "build": "pnpm --filter pglens build",
     "build:landing": "pnpm --filter landing build",
-    "typecheck": "pnpm --filter pgviz lint",
-    "lint": "pnpm --filter pgviz lint",
+    "typecheck": "pnpm --filter pglens lint",
+    "lint": "pnpm --filter pglens lint",
     "format": "prettier --write ."
   }
 }

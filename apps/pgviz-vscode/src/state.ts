@@ -6,8 +6,8 @@ export type ConnectionConfig = {
   url: string
 }
 
-const CONNECTIONS_KEY = 'pgviz.connections'
-const ACTIVE_CONNECTION_KEY = 'pgviz.activeConnection'
+const CONNECTIONS_KEY = 'pglens.connections'
+const ACTIVE_CONNECTION_KEY = 'pglens.activeConnection'
 
 export class ConnectionState {
   private _onDidChangeActive = new vscode.EventEmitter<string | null>()
@@ -32,7 +32,7 @@ export class ConnectionState {
 
   // Sensitive URLs stored in SecretStorage (OS keychain)
   private getSecretKey(id: string): string {
-    return `pgviz.connection.${id}`
+    return `pglens.connection.${id}`
   }
 
   private async getUrl(id: string): Promise<string | undefined> {

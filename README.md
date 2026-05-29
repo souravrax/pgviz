@@ -1,4 +1,4 @@
-# pgviz
+# PgLens
 
 A fast, native desktop app for visualizing and exploring PostgreSQL databases.
 

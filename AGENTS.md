@@ -6,7 +6,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
-# pgviz
+# PgLens
 
 VS Code extension for visualizing PostgreSQL database schemas as interactive ER diagrams.
 
@@ -15,8 +15,8 @@ VS Code extension for visualizing PostgreSQL database schemas as interactive ER 
 ```bash
 pnpm dev                     # Watch extension host + webview
 pnpm build                   # Build extension host + webview for packaging
-pnpm --filter pgviz-vscode compile       # Build extension host only
-pnpm --filter pgviz-vscode build:webview # Build webview only
+pnpm --filter pglens compile       # Build extension host only
+pnpm --filter pglens build:webview # Build webview only
 ```
 
 Package manager: **pnpm** (`packageManager: pnpm@10.0.0` in `package.json`).

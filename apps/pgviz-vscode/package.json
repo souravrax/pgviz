@@ -1,6 +1,6 @@
 {
-  "name": "pgviz",
-  "displayName": "pgviz - PostgreSQL Schema Visualizer",
+  "name": "pglens",
+  "displayName": "PgLens - PostgreSQL Schema Visualizer",
   "description": "Visualize your PostgreSQL database schemas as interactive ER diagrams",
   "version": "0.1.0",
   "publisher": "souravrax",
@@ -28,139 +28,139 @@
   "contributes": {
     "commands": [
       {
-        "command": "pgviz.addConnection",
+        "command": "pglens.addConnection",
         "title": "Add Connection",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(add)"
       },
       {
-        "command": "pgviz.removeConnection",
+        "command": "pglens.removeConnection",
         "title": "Remove Connection",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(trash)"
       },
       {
-        "command": "pgviz.selectConnection",
+        "command": "pglens.selectConnection",
         "title": "Select Connection",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(plug)"
       },
       {
-        "command": "pgviz.deselectConnection",
+        "command": "pglens.deselectConnection",
         "title": "Deselect Connection",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(close)"
       },
       {
-        "command": "pgviz.refreshConnections",
+        "command": "pglens.refreshConnections",
         "title": "Refresh Connections",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(refresh)"
       },
       {
-        "command": "pgviz.refreshSchemas",
+        "command": "pglens.refreshSchemas",
         "title": "Refresh Schemas",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(refresh)"
       },
       {
-        "command": "pgviz.visualizeSchema",
+        "command": "pglens.visualizeSchema",
         "title": "Visualize Schema",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(graph)"
       },
       {
-        "command": "pgviz.visualizeSchemaFromTree",
+        "command": "pglens.visualizeSchemaFromTree",
         "title": "Visualize Schema",
-        "category": "pgviz",
+        "category": "pglens",
         "icon": "$(graph)"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "pgviz-sidebar",
-          "title": "pgviz",
+          "id": "pglens-sidebar",
+          "title": "pglens",
           "icon": "$(database)"
         }
       ]
     },
     "views": {
-      "pgviz-sidebar": [
+      "pglens-sidebar": [
         {
-          "id": "pgviz.connections",
+          "id": "pglens.connections",
           "name": "Connection",
-          "when": "pgviz:enabled"
+          "when": "pglens:enabled"
         },
         {
-          "id": "pgviz.schemas",
+          "id": "pglens.schemas",
           "name": "Schemas",
-          "when": "pgviz:enabled"
+          "when": "pglens:enabled"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "pgviz.connections",
-        "contents": "No connections configured.\n[Add Connection](command:pgviz.addConnection)\n",
-        "when": "pgviz:noConnections"
+        "view": "pglens.connections",
+        "contents": "No connections configured.\n[Add Connection](command:pglens.addConnection)\n",
+        "when": "pglens:noConnections"
       },
       {
-        "view": "pgviz.schemas",
-        "contents": "No connection selected.\n[Select Connection](command:pgviz.selectConnection)\n",
-        "when": "pgviz:noActiveConnection"
+        "view": "pglens.schemas",
+        "contents": "No connection selected.\n[Select Connection](command:pglens.selectConnection)\n",
+        "when": "pglens:noActiveConnection"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "pgviz.addConnection",
-          "when": "view == pgviz.connections",
+          "command": "pglens.addConnection",
+          "when": "view == pglens.connections",
           "group": "navigation@1"
         },
         {
-          "command": "pgviz.refreshConnections",
-          "when": "view == pgviz.connections",
+          "command": "pglens.refreshConnections",
+          "when": "view == pglens.connections",
           "group": "navigation@2"
         },
         {
-          "command": "pgviz.refreshSchemas",
-          "when": "view == pgviz.schemas",
+          "command": "pglens.refreshSchemas",
+          "when": "view == pglens.schemas",
           "group": "navigation@1"
         }
       ],
       "view/item/context": [
         {
-          "command": "pgviz.selectConnection",
-          "when": "view == pgviz.connections && viewItem == connection",
+          "command": "pglens.selectConnection",
+          "when": "view == pglens.connections && viewItem == connection",
           "group": "inline@1"
         },
         {
-          "command": "pgviz.deselectConnection",
-          "when": "view == pgviz.connections && viewItem == connection-active",
+          "command": "pglens.deselectConnection",
+          "when": "view == pglens.connections && viewItem == connection-active",
           "group": "inline@1"
         },
         {
-          "command": "pgviz.removeConnection",
-          "when": "view == pgviz.connections && viewItem == connection",
+          "command": "pglens.removeConnection",
+          "when": "view == pglens.connections && viewItem == connection",
           "group": "inline@2"
         },
         {
-          "command": "pgviz.removeConnection",
-          "when": "view == pgviz.connections && viewItem == connection-active",
+          "command": "pglens.removeConnection",
+          "when": "view == pglens.connections && viewItem == connection-active",
           "group": "inline@2"
         },
         {
-          "command": "pgviz.visualizeSchemaFromTree",
-          "when": "view == pgviz.schemas && viewItem == schema",
+          "command": "pglens.visualizeSchemaFromTree",
+          "when": "view == pglens.schemas && viewItem == schema",
           "group": "inline"
         }
       ]
     },
     "configuration": {
-      "title": "pgviz",
+      "title": "pglens",
       "properties": {
-        "pgviz.showInternalSchemas": {
+        "pglens.showInternalSchemas": {
           "type": "boolean",
           "default": false,
           "description": "Show internal PostgreSQL schemas (pg_catalog, information_schema, etc.)"

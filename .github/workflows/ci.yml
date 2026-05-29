@@ -19,7 +19,7 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install
-      - run: pnpm --filter pgviz lint
+      - run: pnpm --filter pglens lint
 
   build-webview:
     runs-on: ubuntu-latest
@@ -33,4 +33,4 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install
-      - run: pnpm --filter pgviz build:webview
+      - run: pnpm --filter pglens build:webview

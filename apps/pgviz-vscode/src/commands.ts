@@ -12,17 +12,17 @@ export function registerCommands(
   state: ConnectionState
 ) {
   context.subscriptions.push(
-    vscode.commands.registerCommand('pgviz.addConnection', () => {
+    vscode.commands.registerCommand('pglens.addConnection', () => {
       connectionProvider.addConnection()
     }),
 
-    vscode.commands.registerCommand('pgviz.removeConnection', (node) => {
+    vscode.commands.registerCommand('pglens.removeConnection', (node) => {
       if (node?.type === 'connection') {
         connectionProvider.removeConnection(node)
       }
     }),
 
-    vscode.commands.registerCommand('pgviz.selectConnection', async (node?) => {
+    vscode.commands.registerCommand('pglens.selectConnection', async (node?) => {
       if (node?.type === 'connection') {
         if (node.isActive) {
           vscode.window.showInformationMessage('This connection is already active')
@@ -53,7 +53,7 @@ export function registerCommands(
       await state.setActiveConnection(pick.id)
     }),
 
-    vscode.commands.registerCommand('pgviz.deselectConnection', async (node?) => {
+    vscode.commands.registerCommand('pglens.deselectConnection', async (node?) => {
       if (node?.type === 'connection' && !node.isActive) {
         vscode.window.showInformationMessage('This connection is not active')
         return
@@ -61,15 +61,15 @@ export function registerCommands(
       await state.setActiveConnection(null)
     }),
 
-    vscode.commands.registerCommand('pgviz.refreshConnections', () => {
+    vscode.commands.registerCommand('pglens.refreshConnections', () => {
       connectionProvider.refresh()
     }),
 
-    vscode.commands.registerCommand('pgviz.refreshSchemas', () => {
+    vscode.commands.registerCommand('pglens.refreshSchemas', () => {
       schemaProvider.refresh()
     }),
 
-    vscode.commands.registerCommand('pgviz.visualizeSchema', async () => {
+    vscode.commands.registerCommand('pglens.visualizeSchema', async () => {
       const active = await state.getActiveConnection()
       if (!active) {
         vscode.window.showInformationMessage('Add and select a connection first.')
@@ -79,7 +79,7 @@ export function registerCommands(
     }),
 
     vscode.commands.registerCommand(
-      'pgviz.visualizeSchemaFromTree',
+      'pglens.visualizeSchemaFromTree',
       async (node?: SchemaNode) => {
         if (!node || node.type !== 'schema') return
         const active = await state.getActiveConnection()

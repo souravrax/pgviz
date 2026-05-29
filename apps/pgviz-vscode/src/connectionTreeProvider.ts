@@ -68,7 +68,7 @@ export class ConnectionTreeProvider implements vscode.TreeDataProvider<Connectio
 
     try {
       const { listSchemas } = await import('./db.js')
-      const showInternal = vscode.workspace.getConfiguration('pgviz').get<boolean>('showInternalSchemas', false)
+      const showInternal = vscode.workspace.getConfiguration('pglens').get<boolean>('showInternalSchemas', false)
       await listSchemas(url, showInternal)
     } catch (err) {
       const proceed = await vscode.window.showWarningMessage(
