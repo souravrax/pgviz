@@ -1,97 +1,35 @@
 import * as vscode from 'vscode'
+import type { ConnectionTreeProvider } from './connectionTreeProvider.js'
 import type { SchemaTreeProvider, SchemaNode } from './schemaTreeProvider.js'
 import { ConnectionState } from './state.js'
-import { extractSchema, listSchemas } from './db.js'
+import { extractSchema } from './db.js'
 import { showSchemaVisualizer } from './webviewManager.js'
 
 export function registerCommands(
   context: vscode.ExtensionContext,
+  connectionProvider: ConnectionTreeProvider,
   schemaProvider: SchemaTreeProvider,
-  state: ConnectionState,
-  onConnectionsChanged: () => void
+  state: ConnectionState
 ) {
   context.subscriptions.push(
-    vscode.commands.registerCommand('pgviz.addConnection', async () => {
-      const name = await vscode.window.showInputBox({
-        prompt: 'Connection name (e.g., local dev)',
-        placeHolder: 'My Database',
-      })
-      if (!name) return
-
-      const url = await vscode.window.showInputBox({
-        prompt: 'PostgreSQL connection URL',
-        placeHolder: 'postgres://user:pass@localhost:5432/dbname',
-        validateInput: (value) => {
-          if (!value) return 'Connection URL is required'
-          if (!value.startsWith('postgres://') && !value.startsWith('postgresql://')) {
-            return 'URL must start with postgres:// or postgresql://'
-          }
-          return null
-        },
-      })
-      if (!url) return
-
-      try {
-        const showInternal = vscode.workspace.getConfiguration('pgviz').get<boolean>('showInternalSchemas', false)
-        await listSchemas(url, showInternal)
-      } catch (err) {
-        const proceed = await vscode.window.showWarningMessage(
-          `Could not connect: ${err}. Save anyway?`,
-          'Yes',
-          'No'
-        )
-        if (proceed !== 'Yes') return
-      }
-
-      await state.addConnection(name, url)
-      onConnectionsChanged()
-      schemaProvider.refresh()
+    vscode.commands.registerCommand('pgviz.addConnection', () => {
+      connectionProvider.addConnection()
     }),
 
-    vscode.commands.registerCommand('pgviz.removeConnection', async () => {
-      const connections = await state.getConnections()
-      if (connections.length === 0) {
-        vscode.window.showInformationMessage('No connections to remove.')
-        return
+    vscode.commands.registerCommand('pgviz.removeConnection', (node) => {
+      if (node?.type === 'connection') {
+        connectionProvider.removeConnection(node)
       }
-
-      const pick = await vscode.window.showQuickPick(
-        connections.map((c) => ({ label: c.name, description: c.url, id: c.id })),
-        { placeHolder: 'Select connection to remove', canPickMany: false }
-      )
-      if (!pick) return
-
-      const confirm = await vscode.window.showWarningMessage(
-        `Remove connection "${pick.label}"?`,
-        { modal: true },
-        'Remove'
-      )
-      if (confirm !== 'Remove') return
-
-      await state.removeConnection(pick.id)
-      onConnectionsChanged()
-      schemaProvider.refresh()
     }),
 
-    vscode.commands.registerCommand('pgviz.selectConnection', async () => {
-      const connections = await state.getConnections()
-      if (connections.length === 0) {
-        vscode.window.showInformationMessage('No connections. Add one first.')
-        return
+    vscode.commands.registerCommand('pgviz.selectConnection', (node) => {
+      if (node?.type === 'connection') {
+        connectionProvider.selectConnection(node)
       }
+    }),
 
-      const active = await state.getActiveConnection()
-      const pick = await vscode.window.showQuickPick(
-        connections.map((c) => ({
-          label: c.id === active?.id ? `$(check) ${c.name}` : c.name,
-          description: c.id === active?.id ? 'active' : undefined,
-          id: c.id,
-        })),
-        { placeHolder: 'Select active connection', canPickMany: false }
-      )
-      if (!pick) return
-
-      await state.setActiveConnection(pick.id)
+    vscode.commands.registerCommand('pgviz.refreshConnections', () => {
+      connectionProvider.refresh()
     }),
 
     vscode.commands.registerCommand('pgviz.refreshSchemas', () => {
@@ -104,7 +42,7 @@ export function registerCommands(
         vscode.window.showInformationMessage('Add and select a connection first.')
         return
       }
-      vscode.window.showInformationMessage('Click a schema in the list to visualize it.')
+      vscode.window.showInformationMessage('Select a schema from the Schemas panel and click "Visualize Schema"')
     }),
 
     vscode.commands.registerCommand(
