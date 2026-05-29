@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "watch",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "pgviz", "watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": {
+        "pattern": {
+          "regexp": ".*"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^\\[watch\\] build started",
+          "endsPattern": "^\\[watch\\] build finished"
+        }
+      },
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
+      }
+    },
+    {
+      "label": "compile",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "pgviz", "compile"],
+      "group": "build",
+      "problemMatcher": "$esbuild"
+    },
+    {
+      "label": "build:webview",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "pgviz", "build:webview"],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
