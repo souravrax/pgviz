@@ -2,7 +2,7 @@
   "name": "pglens",
   "displayName": "PgLens - PostgreSQL Schema Visualizer",
   "description": "Visualize your PostgreSQL database schemas as interactive ER diagrams",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "souravrax",
   "icon": "images/icon.png",
   "repository": {

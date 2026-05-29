@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2025-06-30
+
+### Added
+
+- **Updated marketplace icon** — New extension icon for VS Code Marketplace and Open VSX.
+
+### Changed
+
+- **Improved graph visuals** — Enhanced edge styling and selection highlighting in SchemaGraph and TableNode components.
+
 ## [0.1.1] - 2025-06-30
 
 ### Added
@@ -31,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Project renamed from `pgviz` to `PgLens`.
 
-[Unreleased]: https://github.com/souravrax/pglens/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/souravrax/pglens/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/souravrax/pglens/releases/tag/v0.1.2
 [0.1.1]: https://github.com/souravrax/pglens/releases/tag/v0.1.1
 [0.1.0]: https://github.com/souravrax/pglens/releases/tag/v0.1.0
