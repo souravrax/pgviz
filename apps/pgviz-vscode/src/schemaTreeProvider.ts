@@ -27,7 +27,7 @@ export class SchemaTreeProvider implements vscode.TreeDataProvider<SchemaNode> {
       element.name,
       vscode.TreeItemCollapsibleState.None
     )
-    item.iconPath = new vscode.ThemeIcon('symbol-namespace')
+    item.iconPath = new vscode.ThemeIcon('table')
     item.contextValue = 'schema'
     item.command = {
       command: 'pgviz.visualizeSchemaFromTree',
