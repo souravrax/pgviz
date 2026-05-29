@@ -146,11 +146,6 @@ function FlowGraph({ schema }: { schema: Schema }) {
   return (
     <SelectedTableContext.Provider value={selectedTable}>
       <div className="w-full h-full relative bg-background overflow-hidden">
-        {/* Debug overlay */}
-        <div className="absolute top-4 right-4 z-50 px-2 py-1 bg-amber-500/20 border border-amber-500/30 rounded text-[10px] text-amber-500 font-mono">
-          nodes:{nodes.length} edges:{edges.length} ready:{layoutReady ? 'yes' : 'no'}
-        </div>
-
         {error && (
           <div className="absolute top-10 left-1/2 -translate-x-1/2 z-30 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs">
             {error}
