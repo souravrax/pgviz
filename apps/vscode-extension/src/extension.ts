@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { ConnectionState } from './state.js'
 import { ConnectionTreeProvider } from './connectionTreeProvider.js'
 import { SchemaTreeProvider } from './schemaTreeProvider.js'
+import { TableTreeProvider, type TableDetailNode } from './tableTreeProvider.js'
 import { registerCommands } from './commands.js'
 
 export function activate(context: vscode.ExtensionContext) {
@@ -11,6 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   const connectionProvider = new ConnectionTreeProvider(context, state)
   const schemaProvider = new SchemaTreeProvider(context, state)
+  const tableProvider = new TableTreeProvider()
 
   const connectionTreeView = vscode.window.createTreeView('pglens.connections', {
     treeDataProvider: connectionProvider,
@@ -20,6 +22,11 @@ export function activate(context: vscode.ExtensionContext) {
   const schemaTreeView = vscode.window.createTreeView('pglens.schemas', {
     treeDataProvider: schemaProvider,
     showCollapseAll: false,
+  })
+
+  const tableTreeView = vscode.window.createTreeView('pglens.tables', {
+    treeDataProvider: tableProvider,
+    showCollapseAll: true,
   })
 
   // Update context flags that drive viewsWelcome
@@ -41,9 +48,9 @@ export function activate(context: vscode.ExtensionContext) {
   // Initial context setup
   updateContext()
 
-  registerCommands(context, connectionProvider, schemaProvider, state)
+  registerCommands(context, connectionProvider, schemaProvider, tableProvider, tableTreeView, state)
 
-  context.subscriptions.push(connectionTreeView, schemaTreeView)
+  context.subscriptions.push(connectionTreeView, schemaTreeView, tableTreeView)
 }
 
 export function deactivate() {

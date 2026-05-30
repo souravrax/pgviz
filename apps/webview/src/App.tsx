@@ -8,12 +8,20 @@ const client = createClient()
 export default function App() {
   const [schema, setSchema] = useState<Schema | null>(null)
   const [isReady, setIsReady] = useState(false)
+  const [selectedTable, setSelectedTable] = useState<string | null>(null)
 
   useEffect(() => {
     setIsReady(true)
     client.getSchema().then((data) => {
       console.log('[pglens webview] schema tables:', data.tables?.length)
       setSchema(data)
+    })
+  }, [])
+
+  // Listen for table selection from the host via the api client
+  useEffect(() => {
+    return client.onSelectTable((tableName) => {
+      setSelectedTable(tableName)
     })
   }, [])
 
@@ -27,7 +35,11 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <SchemaGraph schema={schema} />
+      <SchemaGraph
+        schema={schema}
+        selectedTable={selectedTable}
+        onTableSelect={(name) => client.selectTable(name)}
+      />
     </TooltipProvider>
   )
 }

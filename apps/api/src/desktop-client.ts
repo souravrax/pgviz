@@ -10,4 +10,13 @@ export class DesktopClient implements PgLensClient {
         'Implement DesktopClient.getSchema() with your Tauri command or HTTP fetch.'
     )
   }
+
+  selectTable(_tableName: string): void {
+    // No-op until desktop runtime is implemented
+  }
+
+  onSelectTable(_callback: (tableName: string) => void): () => void {
+    // No-op until desktop runtime is implemented
+    return () => {}
+  }
 }

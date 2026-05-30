@@ -9,4 +9,13 @@ export class MockClient implements PgLensClient {
     await new Promise((r) => setTimeout(r, 400))
     return getMockSchema()
   }
+
+  selectTable(_tableName: string): void {
+    // No-op: no host to notify outside VS Code
+  }
+
+  onSelectTable(_callback: (tableName: string) => void): () => void {
+    // No-op: host never selects a table in mock mode
+    return () => {}
+  }
 }

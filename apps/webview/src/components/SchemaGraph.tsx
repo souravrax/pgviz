@@ -10,6 +10,7 @@ import ReactFlow, {
   BackgroundVariant,
   MarkerType,
 } from 'reactflow'
+import type { Node } from 'reactflow'
 import 'reactflow/dist/style.css'
 import TableNode from './TableNode'
 import { schemaToGraph, applyDagreLayout, type TableNodeData, type Schema } from '@/lib/transform'
@@ -47,14 +48,21 @@ export function useSelectedTable() {
   return useContext(SelectedTableContext)
 }
 
-function FlowGraph({ schema }: { schema: Schema }) {
+function FlowGraph({ schema, externalSelectedTable, onTableSelect }: { schema: Schema; externalSelectedTable?: string | null; onTableSelect?: (name: string) => void }) {
   const nodeTypes = useMemo(() => ({ table: TableNode }), [])
   const edgeTypes = useMemo(() => ({}), [])
   const fitViewOptions = useMemo(() => ({ padding: 0.15 }), [])
 
   const { fitView } = useReactFlow()
-  const [selectedTable, setSelectedTable] = useState<string | null>(null)
+  const [selectedTable, setSelectedTable] = useState<string | null>(externalSelectedTable ?? null)
   const [error, setError] = useState<string | null>(null)
+
+  // Sync external selection from extension
+  useEffect(() => {
+    if (externalSelectedTable !== undefined) {
+      setSelectedTable(externalSelectedTable)
+    }
+  }, [externalSelectedTable])
 
   const { nodes: rawNodes, edges: rawEdges } = useMemo(() => {
     const result = schemaToGraph(schema)
@@ -167,6 +175,11 @@ function FlowGraph({ schema }: { schema: Schema }) {
     [selectedTable, schema]
   )
 
+  const handleNodeClick = useCallback((_: React.MouseEvent, node: Node<TableNodeData>) => {
+    setSelectedTable(node.id)
+    onTableSelect?.(node.id)
+  }, [onTableSelect])
+
   if (!schema) return null
 
   return (
@@ -186,7 +199,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
                 edges={edges}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
-                onNodeClick={(_, node) => setSelectedTable(node.id)}
+                onNodeClick={handleNodeClick}
                 onPaneClick={() => setSelectedTable(null)}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
@@ -387,10 +400,10 @@ function FlowGraph({ schema }: { schema: Schema }) {
   )
 }
 
-export default function SchemaGraph({ schema }: { schema: Schema }) {
+export default function SchemaGraph({ schema, selectedTable, onTableSelect }: { schema: Schema; selectedTable?: string | null; onTableSelect?: (name: string) => void }) {
   return (
     <ReactFlowProvider>
-      <FlowGraph schema={schema} />
+      <FlowGraph schema={schema} externalSelectedTable={selectedTable} onTableSelect={onTableSelect} />
     </ReactFlowProvider>
   )
 }

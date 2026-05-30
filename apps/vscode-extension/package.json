@@ -82,6 +82,12 @@
         "title": "Visualize Schema",
         "category": "pglens",
         "icon": "$(graph)"
+      },
+      {
+        "command": "pglens.selectTableInWebview",
+        "title": "Show in Graph",
+        "category": "pglens",
+        "icon": "$(eye)"
       }
     ],
     "viewsContainers": {
@@ -103,6 +109,11 @@
         {
           "id": "pglens.schemas",
           "name": "Schemas",
+          "when": "pglens:enabled"
+        },
+        {
+          "id": "pglens.tables",
+          "name": "Tables",
           "when": "pglens:enabled"
         }
       ]
@@ -161,6 +172,11 @@
         {
           "command": "pglens.visualizeSchemaFromTree",
           "when": "view == pglens.schemas && viewItem == schema",
+          "group": "inline"
+        },
+        {
+          "command": "pglens.selectTableInWebview",
+          "when": "view == pglens.tables && viewItem == table",
           "group": "inline"
         }
       ]

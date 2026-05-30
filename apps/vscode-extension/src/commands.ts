@@ -1,14 +1,17 @@
 import * as vscode from 'vscode'
 import type { ConnectionTreeProvider } from './connectionTreeProvider.js'
 import type { SchemaTreeProvider, SchemaNode } from './schemaTreeProvider.js'
+import type { TableTreeProvider, TableDetailNode } from './tableTreeProvider.js'
 import { ConnectionState } from './state.js'
 import { extractSchema } from './db.js'
-import { showSchemaVisualizer } from './webviewManager.js'
+import { showSchemaVisualizer, selectTableInWebview } from './webviewManager.js'
 
 export function registerCommands(
   context: vscode.ExtensionContext,
   connectionProvider: ConnectionTreeProvider,
   schemaProvider: SchemaTreeProvider,
+  tableProvider: TableTreeProvider,
+  tableTreeView: vscode.TreeView<TableDetailNode>,
   state: ConnectionState
 ) {
   context.subscriptions.push(
@@ -58,6 +61,7 @@ export function registerCommands(
         vscode.window.showInformationMessage('This connection is not active')
         return
       }
+      tableProvider.setSchema(null)
       await state.setActiveConnection(null)
     }),
 
@@ -92,10 +96,17 @@ export function registerCommands(
           },
           async () => {
             const schema = await extractSchema(active.url, node.name)
-            showSchemaVisualizer(context, schema)
+            tableProvider.setSchema(schema)
+            showSchemaVisualizer(context, schema, tableProvider, tableTreeView)
           }
         )
       }
-    )
+    ),
+
+    vscode.commands.registerCommand('pglens.selectTableInWebview', (node?: TableDetailNode) => {
+      if (!node || node.type !== 'table') return
+      const schema = node.schema
+      selectTableInWebview(schema.name, node.table.name)
+    })
   )
 }
