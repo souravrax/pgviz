@@ -5,7 +5,22 @@ import type { Schema } from '@/lib/transform'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { useSelectedTable } from './SchemaGraph'
-import { EllipsisVerticalIcon, Table2Icon, CopyIcon, CheckIcon } from 'lucide-react'
+import {
+  EllipsisVerticalIcon,
+  Table2Icon,
+  CopyIcon,
+  CheckIcon,
+  KeyRound,
+  Link2,
+  Zap,
+  Hash,
+  Circle,
+  Asterisk,
+  FingerprintPatternIcon,
+  ZapIcon,
+  KeyIcon,
+  LinkIcon,
+} from 'lucide-react'
 import { Button } from './ui/button'
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover'
 import { useState } from 'react'
@@ -24,6 +39,12 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
   const isPK = (col: string) => table.primaryKeys.includes(col)
   const isIndexed = (col: string) => table.indexes.some((idx) => idx.columns.includes(col))
   const getFK = (col: string) => foreignKeys.find((fk) => fk.column === col)
+
+  const isIdentity = (col: typeof table.columns[0]) =>
+    col.defaultValue !== null && /nextval\(|generated\s+.*identity/i.test(col.defaultValue)
+
+  const isUnique = (col: string) =>
+    table.indexes.some((idx) => idx.unique && idx.columns.includes(col))
 
   const isSelected = selectedTable && id === selectedTable
   const [copied, setCopied] = useState<'copy_name' | 'copy_sql' | 'copy_markdown' | null>(null)
@@ -114,52 +135,55 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
               key={col.name}
               className={cn(
                 'px-4 py-2 flex items-center gap-3 text-[13px] relative group',
-                pk && 'bg-amber-500/5',
-                fk && 'bg-primary/5'
+                pk && 'bg-primary/5',
+                fk && 'bg-accent/5'
               )}
             >
               <div className="w-5 flex justify-center shrink-0">
                 {pk ? (
-                  <Badge variant="default">PK</Badge>
+                  <span title="Primary Key">
+                    <KeyIcon className="size-3 text-primary" />
+                  </span>
                 ) : fk ? (
-                  <Badge variant="default">FK</Badge>
+                  <span title={`Foreign Key → ${fk.targetTable}.${fk.targetColumn}`}>
+                    <LinkIcon className="size-3 text-accent-foreground" />
+                  </span>
+                ) : isIdentity(col) ? (
+                  <span title="Identity">
+                    <ZapIcon className="size-3 text-accent-foreground" fill='currentColor' />
+                  </span>
+                ) : isUnique(col.name) ? (
+                  <span title="Unique">
+                    <FingerprintPatternIcon className="size-3 text-muted-foreground" />
+                  </span>
                 ) : null}
               </div>
 
               <span
                 className={cn(
-                  'font-mono flex-1 truncate',
+                  'font-mono flex-1 truncate flex items-center gap-1',
                   pk
-                    ? 'text-amber-500 font-bold'
+                    ? 'text-primary font-bold'
                     : fk
-                      ? 'text-primary font-bold'
+                      ? 'text-accent-foreground font-bold'
                       : 'text-foreground/80'
                 )}
               >
                 {col.name}
+                {!col.nullable ? (
+                  <span title="Not Null">
+                    <Asterisk className="size-3 text-muted-foreground/40" />
+                  </span>
+                ) : null}
               </span>
 
               <span className="font-mono text-[11px] text-muted-foreground/60">{col.type}</span>
 
-              <div className="flex gap-1.5 ml-1">
-                {col.nullable && (
-                  <span className="text-[9px] px-1 rounded bg-muted/50 text-muted-foreground/50 border border-border/20">
-                    null
-                  </span>
-                )}
+              <div className="flex gap-1.5 ml-1 items-center">
                 {indexed && !pk && (
-                  <Badge variant="default" className="h-4 px-1 text-[8px] font-bold">
-                    idx
-                  </Badge>
-                )}
-                {fk && (
-                  <Badge
-                    variant="default"
-                    className="h-4 px-1 text-[8px] font-mono border-primary/20"
-                    title={`References ${fk.targetTable}.${fk.targetColumn}`}
-                  >
-                    → {fk.targetTable}
-                  </Badge>
+                  <span title="Indexed">
+                    <ZapIcon className="size-3 text-muted-foreground/40" fill='currentColor' />
+                  </span>
                 )}
               </div>
             </div>
