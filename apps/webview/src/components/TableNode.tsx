@@ -1,7 +1,6 @@
 import { memo } from 'react'
 import { Handle, Position, type NodeProps } from 'reactflow'
 import type { TableNodeData } from '@/lib/transform'
-import type { Schema } from '@/lib/transform'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { useSelectedTable } from './SchemaGraph'
@@ -10,20 +9,11 @@ import {
   Table2Icon,
   CopyIcon,
   CheckIcon,
-  KeyRound,
-  Link2,
-  Zap,
-  Hash,
-  Circle,
-  Asterisk,
-  FingerprintPatternIcon,
-  ZapIcon,
-  KeyIcon,
-  LinkIcon,
 } from 'lucide-react'
 import { Button } from './ui/button'
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover'
 import { useState } from 'react'
+import TableColumn from './TableColumn'
 
 const HIGHLIGHT_STYLES = {
   selected: 'ring-2 ring-primary/50 ring-offset-2',
@@ -131,62 +121,19 @@ function TableNode({ data, id }: NodeProps<TableNodeData>) {
           const indexed = isIndexed(col.name)
 
           return (
-            <div
+            <TableColumn
               key={col.name}
-              className={cn(
-                'px-4 py-2 flex items-center gap-3 text-[13px] relative group',
-                pk && 'bg-primary/5',
-                fk && 'bg-accent/5'
-              )}
-            >
-              <div className="w-5 flex justify-center shrink-0">
-                {pk ? (
-                  <span title="Primary Key">
-                    <KeyIcon className="size-3 text-primary" />
-                  </span>
-                ) : fk ? (
-                  <span title={`Foreign Key → ${fk.targetTable}.${fk.targetColumn}`}>
-                    <LinkIcon className="size-3 text-accent-foreground" />
-                  </span>
-                ) : isIdentity(col) ? (
-                  <span title="Identity">
-                    <ZapIcon className="size-3 text-accent-foreground" fill='currentColor' />
-                  </span>
-                ) : isUnique(col.name) ? (
-                  <span title="Unique">
-                    <FingerprintPatternIcon className="size-3 text-muted-foreground" />
-                  </span>
-                ) : null}
-              </div>
-
-              <span
-                className={cn(
-                  'font-mono flex-1 truncate flex items-center gap-1',
-                  pk
-                    ? 'text-primary font-bold'
-                    : fk
-                      ? 'text-accent-foreground font-bold'
-                      : 'text-foreground/80'
-                )}
-              >
-                {col.name}
-                {!col.nullable ? (
-                  <span title="Not Null">
-                    <Asterisk className="size-3 text-muted-foreground/40" />
-                  </span>
-                ) : null}
-              </span>
-
-              <span className="font-mono text-[11px] text-muted-foreground/60">{col.type}</span>
-
-              <div className="flex gap-1.5 ml-1 items-center">
-                {indexed && !pk && (
-                  <span title="Indexed">
-                    <ZapIcon className="size-3 text-muted-foreground/40" fill='currentColor' />
-                  </span>
-                )}
-              </div>
-            </div>
+              name={col.name}
+              type={col.type}
+              nullable={col.nullable}
+              isPK={pk}
+              isFK={!!fk}
+              fkTargetTable={fk?.targetTable}
+              fkTargetColumn={fk?.targetColumn}
+              isIdentity={isIdentity(col)}
+              isUnique={isUnique(col.name)}
+              isIndexed={indexed}
+            />
           )
         })}
       </div>

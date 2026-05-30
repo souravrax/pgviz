@@ -185,6 +185,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
             nodeColor={minimapNodeColor}
             maskColor="rgba(0, 0, 0, 0.03)"
             className="bg-card! border-border! rounded-lg! overflow-hidden"
+            position='top-right'
           />
         </ReactFlow>
 
