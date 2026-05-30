@@ -1,15 +1,17 @@
 import { memo } from 'react'
 import { cn } from '@/lib/utils'
 import {
-  KeyIcon,
-  LinkIcon,
-  ZapIcon,
-  FingerprintPatternIcon,
-  DiamondIcon,
   Table2Icon,
-  HashIcon,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import {
+  PkIcon,
+  FkIcon,
+  IdentityIcon,
+  UniqueIcon,
+  IndexedIcon,
+  NullableIcon,
+} from '@/lib/columnIcons'
 import {
   Tooltip,
   TooltipContent,
@@ -58,21 +60,21 @@ function TableColumn({
     {
       id: 'identity',
       condition: isIdentity,
-      icon: HashIcon,
+      icon: IdentityIcon,
       tooltip: 'Identity',
       className: 'text-accent-foreground',
     },
     {
       id: 'unique',
       condition: isUnique && !isPK,
-      icon: FingerprintPatternIcon,
+      icon: UniqueIcon,
       tooltip: 'Unique',
       className: 'text-muted-foreground',
     },
     {
       id: 'indexed',
       condition: isIndexed && !isPK,
-      icon: ZapIcon,
+      icon: IndexedIcon,
       tooltip: 'Indexed',
       className: 'text-muted-foreground/40',
     },
@@ -91,7 +93,7 @@ function TableColumn({
           <Tooltip>
             <TooltipTrigger asChild>
               <span>
-                <KeyIcon className="size-3 text-primary" />
+                <PkIcon className="size-3 text-primary" />
               </span>
             </TooltipTrigger>
             <TooltipContent>Primary Key</TooltipContent>
@@ -102,13 +104,13 @@ function TableColumn({
           <HoverCard openDelay={100} closeDelay={150}>
             <HoverCardTrigger asChild>
               <span className="cursor-pointer">
-                <LinkIcon className="size-3 text-accent-foreground" />
+                <FkIcon className="size-3 text-accent-foreground" />
               </span>
             </HoverCardTrigger>
             <HoverCardContent side="right" align="start" sideOffset={8} className="w-64 p-0">
               <div className="rounded-lg border border-border bg-card shadow-lg overflow-hidden">
                 <div className="px-3 py-2 bg-muted/40 border-b border-border flex items-center gap-2">
-                  <LinkIcon className="size-3.5 text-accent-foreground" />
+                  <FkIcon className="size-3.5 text-accent-foreground" />
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Foreign Key
                   </span>
@@ -175,7 +177,7 @@ function TableColumn({
       <Tooltip>
         <TooltipTrigger asChild>
           <span className="ml-1">
-            <DiamondIcon
+            <NullableIcon
               className="size-3 text-foreground/60"
               fill={nullable ? 'none' : 'currentColor'}
             />

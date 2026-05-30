@@ -16,7 +16,7 @@ import { useState } from 'react'
 import TableColumn from './TableColumn'
 
 const HIGHLIGHT_STYLES = {
-  selected: 'ring-2 ring-primary/50 ring-offset-2',
+  selected: 'ring-2 ring-primary/70',
   outgoing: 'ring-2 ring-cyan-500 ring-offset-2 shadow-[0_0_12px_rgba(6,182,212,0.2)]',
   incoming: 'ring-2 ring-pink-500 ring-offset-2 shadow-[0_0_12px_rgba(236,72,153,0.2)]',
   both: 'ring-2 ring-primary ring-offset-2 shadow-[0_0_12px_rgba(var(--primary),0.2)]',

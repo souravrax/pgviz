@@ -14,7 +14,15 @@ import 'reactflow/dist/style.css'
 import TableNode from './TableNode'
 import { schemaToGraph, applyDagreLayout, type TableNodeData, type Schema } from '@/lib/transform'
 
-import { X, Key, Link, ArrowRight, Hash, List, Maximize2 } from 'lucide-react'
+import { X, ArrowRight, List } from 'lucide-react'
+import {
+  PkIcon,
+  FkIcon,
+  IdentityIcon,
+  UniqueIcon,
+  IndexedIcon,
+  NullableIcon,
+} from '@/lib/columnIcons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -180,7 +188,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
           attributionPosition="bottom-right"
         >
           <Background variant={BackgroundVariant.Dots} color="var(--color-foreground)" gap={32} size={1} />
-          <Controls showInteractive={false} className="bg-card! border-border! fill-foreground!" />
+          <Controls position='top-left' showInteractive={false} className="bg-card! border-border! fill-foreground!" />
           <MiniMap
             nodeColor={minimapNodeColor}
             maskColor="rgba(0, 0, 0, 0.03)"
@@ -189,24 +197,6 @@ function FlowGraph({ schema }: { schema: Schema }) {
           />
         </ReactFlow>
 
-
-
-        {selectedTable && (
-          <div className="absolute top-4 left-4 flex items-center gap-5 px-4 py-2.5 rounded-full border bg-card/90 backdrop-blur shadow-xl text-[10px] font-bold uppercase tracking-wider z-10 transition-all">
-            <div className="flex items-center gap-2">
-              <Badge className="w-2 h-2 rounded-full p-0 border-0" style={{ background: OUTGOING_COLOR }} />
-              <span className="text-muted-foreground">Outgoing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="w-2 h-2 rounded-full p-0 border-0" style={{ background: INCOMING_COLOR }} />
-              <span className="text-muted-foreground">Incoming</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="default" className="w-2 h-2 rounded-full p-0 border-0 bg-primary" />
-              <span className="text-muted-foreground font-bold">Both</span>
-            </div>
-          </div>
-        )}
 
         {selectedTableData && (
           <div className="absolute top-4 right-4 w-80 max-h-[calc(100%-80px)] flex flex-col rounded-xl border bg-card/95 backdrop-blur-xl shadow-2xl z-20 overflow-hidden">
@@ -227,7 +217,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
                 {selectedTableData.primaryKeys.length > 0 && (
                   <div className="px-4 py-3 border-b">
                     <div className="flex items-center gap-2 mb-2 text-amber-500">
-                      <Key className="w-3.5 h-3.5" />
+                      <PkIcon className="w-3.5 h-3.5" />
                       <span className="text-[10px] font-bold uppercase tracking-widest">Primary Keys</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
@@ -241,7 +231,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
                 {selectedTableData.indexes.length > 0 && (
                   <div className="px-4 py-3 border-b">
                     <div className="flex items-center gap-2 mb-2 text-primary">
-                      <Hash className="w-3.5 h-3.5" />
+                      <IndexedIcon className="w-3.5 h-3.5" />
                       <span className="text-[10px] font-bold uppercase tracking-widest">Indexes ({selectedTableData.indexes.length})</span>
                     </div>
                     <div className="space-y-1.5">
@@ -258,7 +248,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
                 {(outgoingRels.length > 0 || incomingRels.length > 0) && (
                   <div className="px-4 py-3 border-b bg-muted/10">
                     <div className="flex items-center gap-2 mb-3">
-                      <Link className="w-3.5 h-3.5 text-muted-foreground" />
+                      <FkIcon className="w-3.5 h-3.5 text-muted-foreground" />
                       <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Relations</span>
                     </div>
                     <div className="space-y-4">
@@ -282,7 +272,7 @@ function FlowGraph({ schema }: { schema: Schema }) {
                       {incomingRels.length > 0 && (
                         <div className="space-y-1.5">
                           <div className="text-[9px] font-bold text-pink-500 uppercase flex items-center gap-1.5 mb-1">
-                            <Link className="w-2.5 h-2.5" /> Incoming
+                            <FkIcon className="w-2.5 h-2.5" /> Incoming
                           </div>
                           {incomingRels.map((rel) => (
                             <div key={rel.constraintName} className="flex flex-col gap-0.5 rounded-md p-1.5 bg-background border border-border/50">
@@ -336,6 +326,37 @@ function FlowGraph({ schema }: { schema: Schema }) {
             </div>
           </div>
         )}
+
+        <div id="column-type-information" className="absolute bottom-0 left-0 right-0 w-full h-10 bg-background/50 backdrop-blur-sm flex items-center justify-center gap-6 text-[10px] text-muted-foreground border-t border-border/30 z-10">
+          <div className="flex items-center gap-1.5">
+            <PkIcon className="w-3 h-3" />
+            <span>Primary Key</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <FkIcon className="w-3 h-3" />
+            <span>Foreign Key</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <IdentityIcon className="w-3 h-3" />
+            <span>Identity</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <UniqueIcon className="w-3 h-3" />
+            <span>Unique</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <NullableIcon className="w-3 h-3" fill="none" />
+            <span>Nullable</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <NullableIcon className="w-3 h-3" fill="currentColor" />
+            <span>Non-Nullable</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <IndexedIcon className="w-3 h-3" />
+            <span>Indexed</span>
+          </div>
+        </div>
       </div>
     </SelectedTableContext.Provider>
   )
