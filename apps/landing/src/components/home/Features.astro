@@ -1,59 +1,50 @@
 ---
 const features = [
   {
-    step: '01',
-    name: 'Schema Visualization',
+    name: 'Interactive ER Diagrams',
     description:
-      'Interactive ER diagrams generated from your PostgreSQL database. See tables, columns, and relationships at a glance.',
+      'Click any table node to inspect columns, primary keys, indexes, and foreign key relationships in a floating tabbed card.',
   },
   {
-    step: '02',
-    name: 'Query Explorer',
+    name: 'Two-Way Selection',
     description:
-      'Browse table data with filtering, sorting, and pagination. No more writing SELECT * just to peek at rows.',
+      'Click a table in the graph to reveal it in the sidebar Tables panel, or click the eye icon in the panel to highlight it in the graph.',
   },
   {
-    step: '03',
-    name: 'SQL Execution',
+    name: 'Schema Browser',
     description:
-      'Write and run queries with full syntax highlighting via CodeMirror. Results formatted in a clean data grid.',
+      'Browse all schemas for your active connection. Select any schema to generate its full ER diagram with automatic Dagre layout.',
   },
   {
-    step: '04',
-    name: 'Query Analysis',
+    name: 'Secure Connections',
     description:
-      'Run EXPLAIN plans with visual breakdowns. Understand query performance without memorizing Postgres internals.',
+      'PostgreSQL URLs are stored in your OS keychain via VS Code SecretStorage. No credentials saved to disk.',
   },
   {
-    step: '05',
-    name: 'Metadata Browser',
+    name: 'Theme Aware',
     description:
-      'Explore triggers, functions, views, extensions, constraints, sequences, and more in one unified interface.',
+      'The graph, sidebar panels, and detail cards automatically adapt to your VS Code color theme using standard CSS variables.',
   },
   {
-    step: '06',
-    name: 'Native & Fast',
+    name: 'Rich Column Details',
     description:
-      'Built with Rust and Tauri. Not an Electron app. Starts instantly, feels native, stays out of your way.',
+      'See PK, FK, Identity, Unique, and Indexed icons alongside data types, nullability, and DEFAULT values at a glance.',
   },
 ];
 ---
 
-<section class="py-16 sm:py-20">
-  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="flex flex-col gap-12 sm:gap-16">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Features</h2>
-      <div class="grid gap-8 lg:grid-cols-3">
+<section class="py-16 sm:py-20 border-t border-stone-100 dark:border-stone-800">
+  <div class="mx-auto max-w-5xl px-6">
+    <div class="flex flex-col gap-12">
+      <h2 class="text-2xl font-semibold tracking-tight">What it does</h2>
+      <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           features.map((feature) => (
-            <div class="bg-primary-500/10 dark:bg-primary-400/10 flex flex-col gap-12 rounded-3xl px-6 py-8">
-              <p class="text-sm">{feature.step}</p>
-              <div class="flex flex-col gap-4">
-                <h3 class="text-xl font-medium">{feature.name}</h3>
-                <p class="text-primary-950/70 dark:text-primary-200/70 text-base sm:text-lg">
-                  {feature.description}
-                </p>
-              </div>
+            <div class="flex flex-col gap-3">
+              <h3 class="text-base font-medium">{feature.name}</h3>
+              <p class="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))
         }

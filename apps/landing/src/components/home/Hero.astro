@@ -1,36 +1,36 @@
-<section class="py-16 sm:py-20">
-  <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="flex flex-col gap-16">
-      <div class="flex flex-col items-start gap-8 sm:gap-10">
-        <div class="flex max-w-xl flex-col items-start gap-4 sm:gap-6">
-          <h1 class="text-4xl font-medium tracking-tight sm:text-5xl lg:text-6xl">
-            PostgreSQL, visualized
-          </h1>
-          <p class="text-primary-950/70 dark:text-primary-200/70 text-lg sm:text-xl">
-            A fast, native desktop app for exploring PostgreSQL databases. Free for personal use. No Electron bloat. No web server.
-          </p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <a
-            href="/download/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            Download Free
-          </a>
-          <a
-            href="https://github.com/souravrax/pgviz"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-primary-950 dark:text-primary-200 hover:bg-primary-500/10 dark:hover:bg-primary-400/10 inline-flex items-center justify-center rounded-full border border-primary-200 dark:border-primary-800 px-5 py-3 text-base font-medium transition"
-          >
-            View on GitHub
-          </a>
-        </div>
+<section class="py-20 sm:py-28">
+  <div class="mx-auto max-w-2xl px-6 text-center">
+    <div class="flex flex-col items-center gap-8">
+      <img
+        src="/assets/icon.png"
+        alt="PgLens"
+        class="h-20 w-20 rounded-2xl shadow-sm"
+      />
+      <div class="flex flex-col gap-5">
+        <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">
+          PostgreSQL schemas,<br class="hidden sm:block" /> visualized
+        </h1>
+        <p class="text-stone-500 dark:text-stone-400 text-lg leading-relaxed max-w-lg mx-auto">
+          A VS Code extension that turns your PostgreSQL database into an interactive ER diagram. No context switching. No web apps. Right inside your editor.
+        </p>
       </div>
-      <div class="bg-primary-500/10 dark:bg-primary-400/10 flex items-center justify-center rounded-3xl aspect-[16/10]">
-        <p class="text-primary-950/50 dark:text-primary-200/50 text-lg">Screenshot coming soon</p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a
+          href="https://marketplace.visualstudio.com/items?itemName=souravrax.pglens"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full bg-stone-950 px-6 py-3 text-sm font-medium text-white transition hover:bg-stone-800 dark:bg-white dark:text-stone-950 dark:hover:bg-stone-200"
+        >
+          Install on VS Code
+        </a>
+        <a
+          href="https://open-vsx.org/extension/souravrax/pglens"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-full border border-stone-200 dark:border-stone-700 px-6 py-3 text-sm font-medium text-stone-700 dark:text-stone-300 transition hover:bg-stone-50 dark:hover:bg-stone-800"
+        >
+          Open VSX
+        </a>
       </div>
     </div>
   </div>
